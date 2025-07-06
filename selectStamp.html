@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>Select Stamp</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style id="styleForPage"></style>
+	<style>
+		
+		@media screen {
+			#printContainer {
+				display: none;
+			}
+		}
+
+		.header {
+		    display: flex;
+			justify-content: flex-end;
+			gap: 10px;
+		}
+		
+		#searchPage {
+			border: 1px solid #9E9E9E;
+			padding: 10px;
+			border-radius: 5px;
+		}
+		
+		.headerPages {
+		    display: flex;
+			justify-content: space-around;
+		}
+		
+		html {
+		    margin: 0;
+			padding: 0;
+			/* overflow: hidden; */
+		}
+		
+		body {
+		    margin: 0;
+    padding: 0;
+    /* height: 100vh; */
+    /* width: 100vw; */
+    /* overflow: auto; */
+		}
+		
+		/*
+		body {
+		    margin: 0;
+			padding: 0;
+			
+		}
+		*/
+		
+		.canvasAndMenu {
+		    display: flex;
+			justify-content: flex-end;
+			/* overflow: auto; */
+			/* height: 100vh; */
+			/* width: 100vw; */
+		}
+		
+		#canvasContainer {
+		    border: 1px solid black;
+			overflow: auto;
+		}
+		
+		
+		canvas {
+			margin: 0;
+			padding: 0;
+			
+			/*border: 5px solid red;*/
+			
+			display: flex;
+			
+			cursor: grab; /* Set the cursor in the form of a hand */
+		}
+		
+		/* Change the cursor when actively dragging */
+		canvas:active {
+			cursor: grabbing;
+		}
+		
+		.menu {
+			width: 300px;
+			display: flex;
+			
+			height: 500px;
+		}
+		
+		#paper-format {
+			margin: 5px;
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+		
+		.printButton {
+			margin: 5px;
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+		
+		.paperSizeSelector {
+			margin-top: 10px;
+		}
+		
+		.bigButtons {
+			padding: 10px 20px;
+			font-size: 16px;
+			width: 200px;
+			margin-bottom: 10px;
+		}
+		
+		.overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 10;
+		}
+		
+		.popup {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			padding: 20px;
+			background-color: #fff;
+			box-shadow:0 0 10px rgba(0, 0, 0, 0.1);
+			z-index: 20;
+			width: 650px;
+			text-align: center;
+			border-radius: 5px;
+		}
+		
+		.popup h2 {
+			margin-top: 0;
+		}
+		
+		.clearLclStorage {
+			margin-top: 20px;
+			padding: 10px 40px;
+			font-size: 16px;
+			width: 150px;
+			text-align: center;
+		}
+		
+		.cancel-btn {
+			margin-top: 20px;
+			padding: 10px 40px;
+			font-size: 16px;
+			width: 150px;
+		}
+		
+		.ok-btn {
+			margin-top: 20px;
+			padding: 10px 40px;
+			font-size: 16px;
+			width: 150px;
+		}
+		
+		.close-btn {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 20px;
+			cursor: pointer;
+		}
+		
+		.popup-header {
+			margin-bottom: 10px;
+			font-size: 25px;
+		}
+		
+		.tabs {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			overflow: hidden;
+			border-bottom: 1px solid #ccc;
+		}
+		
+		.tab-btn {
+			background-color: inherit;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+			font-size: 17px;
+		}
+		
+		.tab-btn:hover {
+			background-color: #ddd;
+		}
+		
+		.tab-btn:active {
+			background-color: #ccc;
+		}
+		
+		.form-group {
+		    display: flex;
+			justify-content: space-between;
+		}
+		
+		.form-group label {
+			width: 40%;
+		}
+		
+		.form-content {
+		    display: flex;
+			flex-direction: column;
+			height: 100%;
+			border: 2px ridge #ccc;
+			padding: 10px;
+			flex-wrap: wrap;
+		}
+		
+		label {
+			text-align: left;
+		}
+		
+		.innerInputs {
+		    font-weight: bold;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			width: 49%;
+			gap: 1px;
+		}
+		
+		.innerInputs2 {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			justify-content: space-between;
+			font-weight: bold;
+		}
+		
+		.innerInputsText {
+		    margin: 0;
+		}
+		
+		.customHeight {
+		    height: 60px;
+			text-align: center;
+			box-sizing: border-box;
+			resize: none;
+			width: 64.5%;
+			border: 1px solid black;
+		}
+		
+		.customHeight::placeholder {
+			text-align: center;
+		}
+		
+		.inputsText {
+		    height: 30px;
+			padding-left: 10px;
+			border: 1px solid #333;
+			width: 60%;
+		}
+		
+		#none1 {
+			width: 75px;
+		}
+		
+		#none2 {
+			width: 75px;
+		}
+		
+		#inventoryNum {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		#vzamInvNum {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		.doubleInputsText {
+			width: 64.5%;
+			height: 34px;
+			display: flex;
+		}
+		
+		#weight {
+		    width: 49%;
+			border: 1px solid black;
+		}
+		
+		#scale {
+		    width: 49%;
+			border: 1px solid black;
+		}
+		
+		.literas-container {
+			height: 30px;
+		}
+		
+		.literas-container select {
+		    width: 30%;
+			border: 1px solid black;
+		}
+		
+		#sheet {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		#sheets {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		.divChanges {
+		    display: flex;
+			flex-direction: column;
+			border: 1px solid #7a7a7a;
+			padding: 5px;
+		}
+		
+		.titleChanges {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+		}
+		
+		.inputsChanges {
+		    display: flex;
+			gap: 5px;
+		}
+		
+		.changes {
+		    width: 30%;
+			border: 1px solid black;
+		}
+		
+		.mainTitleChanges {
+		    margin: 0;
+			font-size: 18px;
+			margin-bottom: 5px;
+		}
+		
+		.titleChangesText {
+		    margin: 0;
+			width: 33%;
+		}
+		
+		.pText {
+			margin: 0;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		
+		.secondWindowforTab1 {
+		    height: 170px;
+		}
+		
+		#litera1Above {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		#litera2Above {
+			width: 49%;
+			border: 1px solid black;
+		}
+		
+		.overflowBlock {
+		    height: 400px;
+			overflow: auto;
+			border: 1px solid black;
+		}
+	</style>
+  </head>
+  <body>
+	<div class="header">
+		
+		<button id="prev" class="navHeadButtons">Назад</button>
+		<button id="next" class="navHeadButtons">Вперёд</button>
+		
+		
+		<div id="searchPage">
+		
+			<div class="headerPages">
+				<p id="currentPage">Текущая страница: 1</p>
+				<p id="totalPages">Страниц в документе: 1</p>
+			</div>
+		
+			<label>Открыть страницу:</label>
+			<input id="findSheet" type="text">
+			<button id="startSearch" class="navHeadButtons">Открыть</button>
+			
+			
+			<select id="canvasSelect"></select>
+		</div>
+	</div>
+	<div class="canvasAndMenu">
+		<div id="canvasContainer">
+			<canvas id="canvas1"></canvas>
+		</div>
+		<div id="printContainer"></div>
+		<!-- <img id="canvasImage" alt="Canvas Image"> -->
+		<div class="menu"> <!-- Maybe delete <aside> ? -->
+			<fieldset>
+				<legend>Параметры листа</legend>
+				<fieldset>
+					<legend>Ориентация листа</legend>
+					<div class="radioButtons">
+						<form id="radio-buttons">
+							<input type="radio" id="landscape" name="orientation" value="landscape"/>
+							<label for="landscape">Альбомная</label>
+
+							<input type="radio" id="portrait" name="orientation" value="portrait"/>
+							<label for="portrait">Книжная</label>
+						</form>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend>Дизайн листа</legend>
+					<div>
+						<form id="radioButtonsDesign">
+							<input type="radio" id="firstSheet" name="design" value="firstSheet" class="radioButtonsDesign"/>
+							<label for="firstSheet">Первый лист</label>
+
+							<input type="radio" id="secondSheet" name="design" value="secondSheet" class="radioButtonsDesign"/>
+							<label for="secondSheet">Второй лист</label>
+						</form>
+					</div>
+				</fieldset>
+				<select id="paper-format" class="paperSizeSelector">
+					<option value="A4">A4</option>
+					<option value="A3">A3</option>
+					<option value="A2">A2</option>
+					<option value="A1">A1</option>
+				</select>
+				<button class="printButton">Печать</button>
+				<span id="descriptionText"></span>
+				<button id="openPopup" class="bigButtons">Заполнить штамп</button>
+				<button id="addSheet" class="bigButtons">Добавить лист</button>
+				<div id="overlay" class="overlay"></div>
+				<div id="popup" class="popup">
+					<div class="popup-header">
+						<span class="popup-header-title">Свойства документа</span>
+						<span class="close-btn">&times;</span>
+					</div>
+					<div class="tabs">
+						<button id="btnTab1" class="tab-btn">Tab 1</button>
+						<button id="btnTab2" class="tab-btn">Tab 2</button>
+					</div>
+					<div class="overflowBlock" data-div="Tab1">
+						<div id="Tab1" class="form-content" data-target="Tab1">
+							<div class="innerInputs">
+								<p class="pText">Штамп разработчика<p>
+								<div class="form-group">
+									<label>Разраб.:</label>
+									<input id="developer" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Пров.:</label>
+									<input id="inspector" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Т. контр.:</label>
+									<input id="techControl" type="text" class="inputsText">
+								</div>
+
+								<div class="form-group">
+									<label>Н. контр.:</label>
+									<input id="normControl" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Утв.:</label>
+									<input id="approving" type="text" class="inputsText">
+								</div>
+								<div class="form-group doubleText">
+									<label>Масса / Масштаб:</label>
+									<div class="doubleInputsText form-group">
+										
+										<input id="weight" type="text">
+										<input id="scale" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Дец. №:</label>
+									<input id="decimalNumber" type="text" class="inputsText">
+								</div>
+								
+							</div>
+							<div class="innerInputs">
+								
+								
+								<div class="form-group">
+									<label>Наименование:</label>
+									<textarea id="name" type="text" class="customHeight"></textarea>
+								</div>
+								
+								
+								<div class="form-group">
+									<label>Литера:</label>
+									<div class="doubleInputsText form-group literas-container">
+										<select id="O" class="literas">
+											<option value=""></option>
+											<option value="O">О</option>
+										</select>
+										<select id="O1" class="literas">
+											<option value=""></option>
+											<option value="O1">О1</option>
+										</select>
+										<select id="O2" class="literas">
+											<option value=""></option>
+											<option value="O2">О2</option>
+										</select>
+									</div>
+									
+								</div>
+								<div class="form-group">
+									<label>Материал:</label>
+									<input id="material" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Наименование / код орг.:</label>
+									<input id="nameOrg" type="text" class="inputsText">
+								</div>
+								<div class="form-group doubleText">
+									<label>Лист / Листов</label>
+									<div class="doubleInputsText form-group">
+										
+										<input id="sheet" type="text">
+										<input id="sheets" type="text">
+									</div>
+								</div>
+								<div class="divChanges">
+									<p class="mainTitleChanges">Сведения об изм.</p>
+									<div class="titleChanges">
+										<p class="titleChangesText">№ изм.:</p>
+										<p class="titleChangesText">Лист:</p>
+										<p class="titleChangesText">№ докум.:</p>
+									</div>
+									<div class="inputsChanges">
+										<input type="number" id="numberInput" class="small-num-input changes" min="0" max="100" step="1">
+										<input id="changeSheet" type="text" class="changes">
+										<input id="numDoc" type="text" class="changes">
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Индекс заказчика:</label>
+									<input id="IdCustomer" type="text" class="inputsText">
+								</div>
+								
+							</div>
+							
+						</div>
+					
+						<div class="innerInputsText form-content secondWindowforTab1" data-target="Tab1">
+							<div class="innerInputs">
+								<p class="pText">Инв. № и решения литер<p>
+								<div class="form-group doubleText">
+									<label>Инв. № подл. / Взам. инв. №:</label>
+									<div class="doubleInputsText form-group">
+										<input id="inventoryNum" type="text">
+										<input id="vzamInvNum" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Инв. № дубл.:</label>
+									<input id="invNumDubl" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Справ. №:</label>
+									<input id="SpravNum" type="text" class="inputsText">
+								</div>
+								
+							</div>
+							<div class="innerInputs">
+								
+								<div class="form-group">
+									<label>Перв. примен.:</label>
+									<input id="firstApplication" type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Дец. № сверху:</label>
+									<input id="decimalNumAbove" type="text" class="inputsText">
+								</div>
+								<div class="form-group doubleText">
+									<label>Решения на литеру:</label>
+									<div class="doubleInputsText form-group">
+										
+										<input id="litera1Above" type="text">
+										<input id="litera2Above" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Знак заказчика:</label>
+									<input id="signCustomer" type="text" class="inputsText">
+								</div>
+							</div>
+						</div>
+					
+					</div>
+					
+					<div class="overflowBlock" data-div="Tab2">
+						<div id="Tab2" class="form-content" data-target="Tab2">
+							<div class="innerInputs2">
+								<div class="form-group">
+									<label>Изм.:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Лист:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>№ докум.:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Подп.:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Дата:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Дец. №:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Лист:</label>
+									<input type="text" class="inputsText">
+								</div>
+								<div class="form-group">
+									<label>Инв. № подл. / Взам. инв. №:</label>
+									<input type="text" class="inputsText">
+								</div>
+								
+								
+							</div>
+							
+						</div>
+					</div>
+					<button class="clearLclStorage">Очистить историю</button>
+					<div class="popup-footer">
+						<button class="ok-btn">Ok</button>
+						<button class="cancel-btn">Отмена</button>
+					</div>
+				</div>
+			</fieldset>
+		</div>
+	</div>
+	<script>
+		window.onload = function() {
+			const canvas = document.getElementById('canvas1');
+			const ctx = canvas.getContext('2d');
+			
+			let sheetWidth;
+			let sheetHeight;
+			let sheetWidthMM;
+			let sheetHeightMM;
+			let format;
+			let orientation;
+			let designSheet;
+			
+			
+			// Function for get DPI current device
+			function getDeviceDPI() {
+				const div = document.createElement('div');
+				div.style.width = '1in';
+				div.style.height = '1in';
+				div.style.position = 'absolute';
+				div.style.left = '-100%';
+				div.style.top = '-100%';
+				document.body.appendChild(div);
+				const dpi = div.offsetWidth;
+				div.parentNode.removeChild(div);
+				//console.log(`dpi = ${dpi}`);
+				return dpi;
+			}
+			
+			getDeviceDPI();
+			
+			
+			// mm to pixels
+			function mmToPixels(mm) {
+				// Screen resolution in pixels per inch
+				//const dpi = 96;
+				const dpi = getDeviceDPI();
+				// Convert millimeters to inches (1 inch = 25.4 mm)
+				//const inches = mm / 25.4;
+				// Conversion of inches to pixels
+				return (mm * ( dpi / 25.4 ));
+			}
+				
+			
+			function pixelsToMM(px) {
+				const dpi = getDeviceDPI();
+				return (px * (25.4 / dpi));
+			};
+			
+			
+			function selectFormat(selectedFormat) {
+				switch(selectedFormat) {
+					case "A4":
+						format = "A4";
+						sheetWidth = 210;
+						sheetHeight = 297;
+						orientation = "portrait";
+						designSheet = "firstSheet";
+						sheetWidthMM = 210;
+						sheetHeightMM = 297;
+						break;
+					case "A3":
+						format = "A3";
+						sheetWidth = 420;
+						sheetHeight = 297;
+						orientation = "landscape";
+						designSheet = "firstSheet";
+						sheetWidthMM = 420;
+						sheetHeightMM = 297;
+						break;
+					case "A2":
+						format = "A2";
+						sheetWidth = 420;
+						sheetHeight = 594;
+						orientation = "portrait";
+						designSheet = "firstSheet";
+						sheetWidthMM = 420;
+						sheetHeightMM = 594;
+						break;
+					case "A1":
+						format = "A1";
+						sheetWidth = 594;
+						sheetHeight = 841;
+						orientation = "portrait";
+						designSheet = "firstSheet";
+						sheetWidthMM = 594;
+						sheetHeightMM = 841;
+						break;
+				}
+			}
+			
+			// Get the 'select' element
+			const paperFormat = document.getElementById('paper-format');
+			// Processing event change select
+			paperFormat.addEventListener('change', function() {
+				const activeCanvas = document.querySelector('#canvas1');
+				const context = activeCanvas.getContext('2d');
+				const scale = 3.74;
+				const selectedFormat = this.value;
+				selectFormat(selectedFormat);
+				activeCanvas.style.transformOrigin = 'top left';
+				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+				activeCanvas.style.transformOrigin = 'top left';
+				activeCanvas.style.transform = 'scale(0.19)';
+				const canvasContainer = document.querySelector('#canvasContainer');	
+				canvasContainer.style.width = `${activeCanvas.width * 0.2}px`;
+				canvasContainer.style.height = `${activeCanvas.height * 0.2}px`;
+
+			});
+			
+			function initialCanvas() {
+				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
+				const context = activeCanvas.getContext('2d');
+				const scale = 3.74;				
+				activeCanvas.style.transformOrigin = 'top left';
+				selectFormat(paperFormat.value);
+				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+				
+				
+				
+				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+				
+				const canvasContainer = document.querySelector('#canvasContainer');				
+				canvasContainer.style.width = `${sheetWidth * scale}px`;
+				canvasContainer.style.height = `${sheetHeight * scale}px`;
+				
+				
+				// Если оставить, то канвас в окне будет маленьким, но на большом листе
+				// activeCanvas.style.transform = 'scale(0.19)'; 				
+			}
+			initialCanvas();
+			
+			function selectOrientation(valueOfOrientation) {
+				const scale = 3.74;
+				const context = ctx;
+				let newSheetHeight;
+				let newSheetWidth;
+				switch(valueOfOrientation) {
+					case "landscape": 
+						if (format !== "A4") {
+							newSheetWidth = Math.max(sheetWidth, sheetHeight);
+							newSheetHeight = Math.min(sheetWidth, sheetHeight);
+							context.clearRect(0, 0, canvas.width, canvas.height);
+							// paintCanvas(sheetWidth, sheetHeight, canvas);
+							paintCanvas(newSheetWidth, newSheetHeight, canvas, scale);
+							break;
+						}
+					case "portrait":
+						newSheetWidth = Math.min(sheetWidth, sheetHeight);
+						newSheetHeight = Math.max(sheetWidth, sheetHeight);
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						// paintCanvas(sheetWidth, sheetHeight, canvas, sheetWidthMM, sheetHeightMM);
+						paintCanvas(newSheetWidth, newSheetHeight, canvas, scale);
+						break;
+				}
+			}
+
+			var orientLandscapeRadioBtn = document.getElementById('landscape');
+			var orientPortraitRadioBtn = document.getElementById('portrait');
+			orientLandscapeRadioBtn.addEventListener('click', function() {
+				if (orientLandscapeRadioBtn.checked) {
+					orientation = "landscape";
+					selectOrientation(orientLandscapeRadioBtn.value);
+				}
+			});
+			
+			orientPortraitRadioBtn.addEventListener('click', function() {
+				if (orientPortraitRadioBtn.checked) {
+					orientation = "portrait";
+					selectOrientation(orientPortraitRadioBtn.value);
+				}
+			});
+			
+			// Select desing of sheet
+			function selectDesign(valueOfDesignSheet) {
+				const activeCanvas = document.querySelector('#canvas1');
+				const context = activeCanvas.getContext('2d');
+				const scale = 3.74;
+				if (valueOfDesignSheet === "secondSheet") {
+					activeCanvas.style.transformOrigin = 'top left';
+					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+					designSheet = "secondSheet";
+					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+					fillTextFromLocalStorage(context);
+				} else if (valueOfDesignSheet === "firstSheet") {
+				
+					designSheet = "firstSheet";
+					activeCanvas.style.transformOrigin = 'top left';
+					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+					
+				}
+			}
+			
+			const firstSheet = document.getElementById('firstSheet');
+			const secondSheet = document.getElementById('secondSheet');
+			firstSheet.addEventListener('click', function() {
+				if (firstSheet.checked) {
+					selectDesign(firstSheet.value);
+				}
+			});
+			
+			secondSheet.addEventListener('click', function() {
+				if (secondSheet.checked) {
+					selectDesign(secondSheet.value);
+				} 
+			});
+			
+			
+			
+			// Function for printing
+			const printButton = document.querySelector('.printButton');
+			printButton.addEventListener('click', function() {
+		
+				const activeCanvas = document.querySelector('#canvas1');
+				const activeCanvasContext = activeCanvas.getContext('2d');
+				
+				// activeCanvas.style.transform = 'scale(1)';
+				
+				const canvasContainer = document.querySelector('#canvasContainer');
+				canvasContainer.style.transform = 'scale(1)';
+				
+				
+				const actualWidth = Math.ceil(activeCanvas.width * 0.06684491978609625); // width in mm
+				const actualHeight = Math.ceil(activeCanvas.height * 0.06684491978609625); // height in mm
+				const activeCanvasDataURL = activeCanvas.toDataURL('image/png');
+				const img = document.createElement('img');
+				img.id = "canvasImage";				
+				img.style.margin = 0;
+				img.src = activeCanvasDataURL;
+				img.style.width = `${actualWidth}mm`;
+				img.style.height = `${actualHeight}mm`;
+				img.style.objectFit = 'contain';
+				img.style.pageBreakInside = 'avoid';
+				
+				const printContainer = document.querySelector('#printContainer');
+				printContainer.innerHTML = ''; // Clear previous image if any
+				printContainer.appendChild(img);
+				
+				const styleElForPage = document.querySelector('#styleForPage'); // ${actualWidth}mm ${actualHeight}mm 
+				styleElForPage.textContent = '';
+				styleElForPage.textContent = `@page { size: ${format} ${orientation}; margin: 0; }
+				@media print { 
+					body * { 
+						margin: 0;
+						padding: 0;
+					} 
+					.header * { display: none; } 
+					#canvas1 { display: none; } 
+					.menu * { display: none; } 
+					#canvasImage { 
+						margin: 0 auto; 
+						padding: 0; 
+						display: block; 
+						width: ${actualWidth}mm;
+						height: ${actualHeight}mm;
+					} 
+				}
+				`;				
+				
+				img.onload = function() {
+					window.print();
+					
+					initialCanvas();
+				};
+				
+				
+			});
+
+			
+			// Handler for addind new sheet to document
+			let numOfBtn = 2;
+			
+			const addSheet = document.querySelector('#addSheet');
+			const canvasesData = []; // This array is for storage all created canvases
+			addSheet.addEventListener('click', () => {
+			
+				const mainCanvas = document.querySelector('#canvas1');
+				const canvasContainer = document.querySelector('#canvasContainer');
+				const canvasSelect = document.querySelector('#canvasSelect');
+				
+				
+				// Так, вроде тут получилось, но нужно доработать, поиграть с размерами канваса и изображения и сделать добавление 2-го листа только,
+				// т.к. первый лист может быть только один;
+				// Размер добавляемого канваса слишком большой почему-то;
+				// Нужно в стили добавляемых канвасов добавить размеры в пикселях;
+								
+				// Create new element canvas
+				const newCanvas = document.createElement('canvas');
+				designSheet = 'secondSheet';
+								
+				// Set id for new canvas
+				const canvasCount = canvasContainer.querySelectorAll('canvas').length + 1;
+				newCanvas.id = 'canvas' + canvasCount;
+				
+				const previousCanvas = document.querySelector(`#canvas${canvasCount - 1}`);
+				previousCanvas.style.display = 'none';
+				
+				// Add new canvas to the container
+				//canvasArray.push(newCanvas);
+				canvasContainer.appendChild(newCanvas);
+
+				paintCanvas(sheetWidth, sheetHeight, newCanvas, scale);
+
+				// Попробуй преобразовать канвасы в PNG-код, который потом можно преобразовывать в канвасы обратно,
+				// при этом отображаться должен только один канвас.
+				
+				// Save the data of canvases as a images (data URLs)
+				const canvasData = newCanvas.toDataURL(); // Save canvas to URL format (string)
+				canvasesData.push(canvasData);
+				//console.log(`canvasesData.length= ${canvasesData.length}`);
+				//console.log(`canvasesData= ${canvasesData}`);
+				// console.log(`canvasData= ${canvasData}`);
+				
+				// Repair canvases from data URL and add to other container
+				const img = new Image();
+				img.onload = function() {					
+					ctx.drawImage(img, 0, 0);
+					canvasContainer.appendChild(newCanvas);
+				};
+				img.src = canvasData;
+				
+				// Adding tabs to pop-up window
+				const tabs = document.querySelector('.tabs');
+				// <button id="btnTab2" class="tab-btn">Tab 2</button>
+				const newBtn = document.createElement('button');
+				newBtn.setAttribute('id', `btnTab${numOfBtn}`);
+				newBtn.setAttribute('class', 'tab-btn');
+				newBtn.innerHTML = `Tab ${numOfBtn}`;
+				tabs.appendChild(newBtn);
+				numOfBtn += 1;
+				
+				// Rendering quantity of all pages at header
+				const totalPages = document.querySelector('#totalPages');
+				const totalPagesText = totalPages.textContent.slice(-1);
+				const totalPagesPlus1 = Number(totalPagesText) + 1;				
+				totalPages.innerHTML = `Страниц в документе: ${totalPagesPlus1}`;
+				
+			});
+			
+			
+			let currentIndex = 0;
+			
+			document.querySelector('#prev').addEventListener('click', function() {
+				if (currentIndex > 0) {
+					currentIndex -= 1;
+					updateVisibleCanvas();
+				}
+			});
+			
+			document.querySelector('#next').addEventListener('click', function() {
+				if (currentIndex < canvasArray.length - 1) {
+					currentIndex += 1;
+					updateVisibleCanvas();
+				}
+			});
+			
+			
+			function updateVisibleCanvas() {
+				const visibleCanvas = document.querySelector('#canvas');
+				const ctx = visibleCanvas.getContext('2d');
+				
+				// Clear visible canvas
+				ctx.clearRect(0, 0, sheetWidth, sheetHeight);
+				
+				if (canvasArray.length > 0) {
+					const currentCanvas = canvasArray[currentIndex];
+					ctx.drawImage(currentCanvas, 0, 0);
+				}
+			}
+			
+			// Get values from Local Storage and input them to input fields
+			function addValuesFromLocalStorage() {
+				// Get object 'entriesDevTable' from Local Storage (It save at the browser);
+				const entriesDevTableJSON = localStorage.getItem('entriesDevTable');
+				if (entriesDevTableJSON) {
+					const entriesDevTable = JSON.parse(entriesDevTableJSON);
+					
+					const developerInput = document.querySelector('#developer');
+					const developer = entriesDevTable.developer;
+					developerInput.value = developer; 
+					
+					const inspectorInput = document.querySelector('#inspector');
+					const inspector = entriesDevTable.inspector;
+					inspectorInput.value = inspector; 
+					
+					const techControlInput = document.querySelector('#techControl');
+					const techControl = entriesDevTable.techControl;
+					techControlInput.value = techControl;
+					
+					const normControlInput = document.querySelector('#normControl');
+					const normControl = entriesDevTable.normControl;
+					normControlInput.value = normControl;
+					
+					const approvingInput = document.querySelector('#approving');
+					const approving = entriesDevTable.approving;
+					approvingInput.value = approving;
+					
+					const weightInput = document.querySelector('#weight');
+					const weight = entriesDevTable.weight;
+					weightInput.value = weight;
+					
+					const scaleInput = document.querySelector('#scale');
+					const scale = entriesDevTable.scale;
+					scaleInput.value = scale;
+					
+					const materialInput = document.querySelector('#material');
+					const material = entriesDevTable.material;
+					materialInput.value = material;
+					
+					const OInput = document.querySelector('#O');
+					const O = entriesDevTable.O;
+					OInput.value = O;
+					
+					const O1Input = document.querySelector('#O1');
+					const O1 = entriesDevTable.O1;
+					O1Input.value = O1; 
+					
+					const O2Input = document.querySelector('#O2');
+					const O2 = entriesDevTable.O2;
+					O2Input.value = O2;
+					
+					const sheetInput = document.querySelector('#sheet');
+					const sheet = entriesDevTable.sheet;
+					sheetInput.value = sheet;
+					
+					const sheetsInput = document.querySelector('#sheets');
+					const sheets = entriesDevTable.sheets;
+					sheetsInput.value = sheets; 
+					
+					const decimalNumberInput = document.querySelector('#decimalNumber');
+					const decimalNumber = entriesDevTable.decimalNumber;
+					decimalNumberInput.value = decimalNumber;
+					
+					const firstApplicationInput = document.querySelector('#firstApplication');
+					const firstApplication = entriesDevTable.firstApplication;
+					firstApplicationInput.value = firstApplication;
+					
+					const inventoryNumInput = document.querySelector('#inventoryNum');
+					const inventoryNum = entriesDevTable.inventoryNum;
+					inventoryNumInput.value = inventoryNum;
+					
+					const vzamInvNumInput = document.querySelector('#vzamInvNum');
+					const vzamInvNum = entriesDevTable.vzamInvNum;
+					vzamInvNumInput.value = vzamInvNum;
+					
+					const invNumDublInput = document.querySelector('#invNumDubl');
+					const invNumDubl = entriesDevTable.invNumDubl;
+					invNumDublInput.value = invNumDubl;
+					
+					const SpravNumInput = document.querySelector('#SpravNum');
+					const SpravNum = entriesDevTable.SpravNum;
+					SpravNumInput.value = SpravNum;
+					
+					const decimalNumAboveInput = document.querySelector('#decimalNumAbove');
+					const decimalNumAbove = entriesDevTable.decimalNumAbove;
+					decimalNumAboveInput.value = decimalNumAbove;
+					
+					const litera1AboveInput = document.querySelector('#litera1Above');
+					const litera1Above = entriesDevTable.litera1Above;
+					litera1AboveInput.value = litera1Above; 
+					
+					const litera2AboveInput = document.querySelector('#litera2Above');
+					const litera2Above = entriesDevTable.litera2Above;
+					litera2AboveInput.value = litera2Above;
+
+					const signCustomerInput = document.querySelector('#signCustomer');
+					const signCustomer = entriesDevTable.signCustomer;
+					signCustomerInput.value = signCustomer;
+					
+					const numberInputInput = document.querySelector('#numberInput');
+					const numberInput = entriesDevTable.numberInput;
+					numberInputInput.value = numberInput; 
+					
+					const changeSheetInput = document.querySelector('#changeSheet');
+					const changeSheet = entriesDevTable.changeSheet;
+					changeSheetInput.value = changeSheet; 
+					
+					const numDocInput = document.querySelector('#numDoc');
+					const numDoc = entriesDevTable.numDoc;
+					numDocInput.value = numDoc;
+					
+					const nameInput = document.querySelector('#name');
+					const name = entriesDevTable.name;
+					nameInput.value = name;
+					
+					const nameOrgInput = document.querySelector('#nameOrg');
+					const nameOrg = entriesDevTable.nameOrg;
+					nameOrgInput.value = nameOrg;
+					
+					const IdCustomerInput = document.querySelector('#IdCustomer');
+					const IdCustomer = entriesDevTable.IdCustomer;
+					IdCustomerInput.value = IdCustomer;
+				}
+			}
+			
+			
+			
+			
+			// Open the pop-up window
+			const openPopupButton = document.getElementById('openPopup');
+			const closePopupButton = document.querySelector('.cancel-btn');
+			const overlay = document.getElementById('overlay');
+			const popup = document.getElementById('popup');
+			const closeBtn = document.querySelector('.close-btn');
+			openPopupButton.addEventListener('click', () => {
+				overlay.style.display = 'block';
+				popup.style.display = 'block';
+				
+				addValuesFromLocalStorage();
+							
+			});
+			
+			console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+			
+			closePopupButton.addEventListener('click', () => {
+				overlay.style.display = 'none';
+				popup.style.display = 'none';
+			});
+			closeBtn.addEventListener('click', () => {
+				overlay.style.display = 'none';
+				popup.style.display = 'none';
+			});
+			overlay.addEventListener('click', () => {
+				overlay.style.display = 'none';
+				popup.style.display = 'none';
+			});
+			
+			// Function for switching for tabs
+			function openTab(evt, tabId) {
+				const tabLinks = document.getElementsByClassName('tab-btn');
+				const tabContent = document.getElementsByClassName('form-content');				
+				const overflowBlocks = document.querySelectorAll('.overflowBlock');
+				// Hide the overflowBlocks elements
+				for (let k = 0; k < overflowBlocks.length; k += 1) {
+					overflowBlocks[k].style.display = "none";
+				}
+				
+				// Hide all tab-contents
+				for (let i = 0; i < tabContent.length; i += 1) {
+					//console.log(`tabContent[i]= ${JSON.stringify(tabContent[i])}`);
+					tabContent[i].style.display = "none";
+				}
+				
+				// Remove ':active' class from all tabs
+				for (let j = 0; j < tabLinks.length; j += 1) {
+					tabLinks[j].className = tabLinks[j].className.replace(' active', '');
+				}
+				
+				//Show the current content and make current tab active
+				const contentId = tabId.slice(3);
+				const dataTargets = document.querySelectorAll(`[data-target="${contentId}"]`);
+				const dataDivs = document.querySelectorAll(`[data-div="${contentId}"]`);
+				
+				dataDivs.forEach((element) => {
+					element.style.display = 'block';
+				});
+				
+				
+				dataTargets.forEach((element) => {
+					element.style.display = 'flex';
+				});
+				//document.getElementById(contentId).style.display = 'flex';
+				evt.currentTarget.className += ' active';
+			}
+			
+			// Also for switching tabs
+			const tabLinks = document.getElementsByClassName('tab-btn');
+			for (let j = 0; j < tabLinks.length; j += 1) {
+				tabLinks[j].addEventListener('click', function(event) {
+					const tabId = this.id;
+					const tabClass = this.class;
+					openTab(event, tabId);
+				});
+			}
+			
+			// Hide tab-contents except first tab-content
+			const tabContent = document.getElementsByClassName('form-content');
+			for (let i = 2; i < tabContent.length; i += 1) {
+				tabContent[i].style.display = "none";
+			}
+			// Hide the overflowBlocks elements except first overflowBlock element
+			const overflowBlocks = document.querySelectorAll('.overflowBlock');
+			for (let k = 1; k < overflowBlocks.length; k += 1) {
+				overflowBlocks[k].style.display = "none";
+			}
+			
+			// Relocate these funtions higher
+			function drawText(text, zoom, context) {
+				// Zoom factor
+				var zoom = 1;
+				context.fillStyle = "blue";
+				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 1.2) * zoom);  // x = 26; y = 282.9;
+				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 277.9;
+				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 267.9;
+				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 262.9;
+				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;			
+			}
+			
+			function fillTextFromLocalStorage(context) {
+			
+				const zoom = 1;
+				
+				const decimalNumber = localStorage.getItem('decimalNumber');
+				
+				// Fill the canvas
+				context.save();
+				context.font = `${9 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const decNumWidthText = context.measureText(decimalNumber).width;
+				context.fillText(decimalNumber, ((sheetWidth - 5) - 10 - 110 + 55 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 3) * zoom);  // x = 26; y = 257.9;
+				context.restore();
+				
+			}	
+			
+			
+			const divisionBy2 = (number) => number / 2;
+			
+			
+			function fillText(context) {
+				
+				const zoom = 1;
+			
+				// Choose values from fields in pop-up window
+				const developer = document.querySelector('#developer').value;
+				const inspector = document.querySelector('#inspector').value;
+				const techControl = document.querySelector('#techControl').value;
+				const normControl = document.querySelector('#normControl').value;
+				const approving = document.querySelector('#approving').value;
+				const weight = document.querySelector('#weight').value;
+				const scale = document.querySelector('#scale').value;
+
+				const material = document.querySelector('#material').value;
+				
+				const O = document.querySelector('#O').value;
+				const O1 = document.querySelector('#O1').value;
+				const O2 = document.querySelector('#O2').value;
+				
+				const sheet = document.querySelector('#sheet').value;
+				const sheets = document.querySelector('#sheets').value;
+				
+				const decimalNumber = document.querySelector('#decimalNumber').value;
+				
+				const firstApplication = document.querySelector('#firstApplication').value;
+				const inventoryNum = document.querySelector('#inventoryNum').value;
+				const vzamInvNum = document.querySelector('#vzamInvNum').value;
+				const invNumDubl = document.querySelector('#invNumDubl').value;
+				const SpravNum = document.querySelector('#SpravNum').value;
+				
+				const decimalNumAbove = document.querySelector('#decimalNumAbove').value;
+				const litera1Above = document.querySelector('#litera1Above').value;
+				const litera2Above = document.querySelector('#litera2Above').value;
+				const signCustomer = document.querySelector('#signCustomer').value;
+				
+				const numberInput = document.querySelector('#numberInput').value;
+				const changeSheet = document.querySelector('#changeSheet').value;
+				const numDoc = document.querySelector('#numDoc').value;
+				
+				const name = document.querySelector('#name').value; 
+				const nameOrg = document.querySelector('#nameOrg').value;
+				
+				const IdCustomer = document.querySelector('#IdCustomer').value;
+
+				
+				// Save these values in localStorage
+				const entriesDevTable = {
+					developer,
+					inspector,
+					techControl,
+					normControl,
+					approving,
+					weight,
+					scale,
+					material,
+					O,
+					O1,
+					O2,
+					sheet,
+					sheets,
+					decimalNumber,
+					firstApplication,
+					inventoryNum,
+					vzamInvNum,
+					invNumDubl,
+					SpravNum,
+					decimalNumAbove,
+					litera1Above,
+					litera2Above,
+					signCustomer,
+					numberInput,
+					changeSheet,
+					numDoc,
+					name,
+					nameOrg,
+					IdCustomer,
+				};
+				
+				localStorage.setItem('entriesDevTable', JSON.stringify(entriesDevTable));
+
+				console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+
+				// Fill the canvas
+				context.save();
+				context.font = `${9 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const decNumWidthText = context.measureText(decimalNumber).width;
+				context.fillText(decimalNumber, ((sheetWidth - 5) - 60 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
+				context.restore();
+				
+				context.save();
+				context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(Math.PI / 1);
+				context.font = `${9 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
+				context.fillText(decimalNumAbove, ((20 - 70 - 5) - (decimalNumAboveWidth / 2)) * zoom, (5) * zoom);  // x = 26; y = 257.9;				
+				context.restore();
+				
+				context.save();
+				context.font = `${9 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const signCustomerWidth = context.measureText(signCustomer).width;
+				context.fillText(signCustomer, ((20 + 70 + 7.5) - (signCustomerWidth / 2)) * zoom, (5 + 7 + 3) * zoom);  // x = 26; y = 257.9;
+				context.restore();
+				
+				context.save();
+				context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(Math.PI / 1);
+				context.font = `${5.5 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const litera1AboveWidth = context.measureText(litera1Above).width;
+				context.fillText(litera1Above, ((20 - 70 - 5 - 14 - 35 - 26.5 - (litera1AboveWidth / 2))) * zoom, (8) * zoom);  // x = 26; y = 257.9;
+				const litera2AboveWidth = context.measureText(litera2Above).width;
+				context.fillText(litera2Above, ((20 - 70 - 5 - 14 - 35 - 26.5) - (litera2AboveWidth / 2)) * zoom, (5 - 4) * zoom);  // x = 26; y = 257.9;
+				
+				context.restore();
+				
+				context.save();
+				context.font = `${3.5 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+
+				context.fillText(O, ((sheetWidth - 5) - 50 + 2) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				context.fillText(O1, ((sheetWidth - 5) - 50 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				context.fillText(O2, ((sheetWidth - 5) - 50 + 5 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+			
+				const txtWidth = context.measureText(weight).width;
+				context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 9 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				
+				const txtScaleWidth = context.measureText(scale).width;
+				context.fillText(scale, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
+				context.restore();
+				
+				context.save();
+				context.translate(((20 - 7) - 1.5) * zoom, ((sheetHeight - 5) - 12) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(-Math.PI / 2);
+				// Fill table
+				const textSizeInv = 3.5 * zoom;		
+				context.fillStyle = "blue";
+				context.font = `${textSizeInv}px Arial Narrow`;
+				const invNumWidth = context.measureText(inventoryNum).width;
+				context.fillText(inventoryNum, (0 - (invNumWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 0; y = 0;
+				const vzamInvNumWidth = context.measureText(vzamInvNum).width;
+				context.fillText(vzamInvNum, (25 + 35 - (vzamInvNumWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 60; y = 0;
+				const invNumDublWidth = context.measureText(invNumDubl).width;
+				context.fillText(invNumDubl, (25 + 35 + 25 - (invNumDublWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 85.2; y = 0;
+				const SpravNumWidth = context.measureText(SpravNum).width;
+				context.fillText(SpravNum, (287 - 60 - 60 - 8 + 25 - (SpravNumWidth / 2)) * zoom, 7 * zoom);  // x = 180.4; y = 0;
+				const firstApplicationWidth = context.measureText(firstApplication).width;
+				context.fillText(firstApplication, (287 - 60 - 8 + 25 - (firstApplicationWidth / 2)) * zoom, 7 * zoom);  // x = 234.7; y = 0;
+				context.restore();
+				
+				context.font = `${3.5 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				
+				context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 0.5) * zoom);  // x = 154; y = 267.8;
+				context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 0.5) * zoom);  // x = 174.5; y = 267.8;
+				
+				context.save();
+				// Zoom factor
+				// var zoom = 1;
+				const textSizeDev = 3.5 * zoom;		
+				context.font = `${textSizeDev}px Arial Narrow`;
+				context.fillStyle = "blue";
+				context.fillText(approving, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5 - 1)) * zoom);  // x = 26; y = 282.9;
+				context.fillText(normControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 277.9;
+				context.fillText(techControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 267.9;
+				context.fillText(inspector, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 262.9;
+				context.fillText(developer, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;
+				
+				const numberInputWidth = context.measureText(numberInput).width;
+				context.fillText(numberInput, ((sheetWidth - 5) - 185 + 4 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+				
+				const changeSheetWidth = context.measureText(changeSheet).width;
+				context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 4 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+
+				const numDocWidth = context.measureText(numDoc).width;	
+				context.fillText(numDoc, ((sheetWidth - 5) - 185 + 4 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+				
+				const IdCustomerWidth = context.measureText(IdCustomer).width;
+				context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
+				
+				const textSizeMainTitle = 5 * zoom;	
+				context.font = `${textSizeMainTitle}px Arial Narrow`;
+				context.fillStyle = "blue";	
+
+				const materialWidth = context.measureText(material).width;
+				context.fillText(material, ((sheetWidth - 5) - 50 - 70 + 35 - (materialWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+				
+				const nameOrgWidth = context.measureText(nameOrg).width;
+				context.fillText(nameOrg, ((sheetWidth - 5) - 50 + 25 - (nameOrgWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+				
+				// TextArea 'name' with \n
+				const nameLines = name.split('\n');
+				const lineHeight = 5;
+				
+				let textWidth = context.measureText(name).width;
+				let x = ((sheetWidth - 5) - 50 - 70 + 35) * zoom;
+				let y = ((sheetHeight - 5) - 15 - 12.5)  * zoom;
+				for (let i = 0; i < nameLines.length; i += 1) {
+					const line = nameLines[i];
+					textWidth = context.measureText(line).width;
+					x -= textWidth / 2;
+					context.fillText(line, x, y);
+					y += lineHeight;
+					x += textWidth / 2;
+				}
+				context.restore();
+			}
+			
+			// Function for clearing Local Storage
+			const clearLclStorage = document.querySelector('.clearLclStorage');
+			clearLclStorage.addEventListener('click', () => {
+				localStorage.clear();
+				
+				console.log(`Cleared localStorage= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+				
+				const allInputsForClear = document.querySelectorAll('.form-group input');
+				allInputsForClear.forEach((inputForClear) => {
+					inputForClear.value = '';
+				});
+				
+				const inputsChanges = document.querySelectorAll('.inputsChanges input');
+				inputsChanges.forEach((inputChanges) => {
+					inputChanges.value = '';
+				});
+				
+				const textareaInput = document.querySelector('.customHeight');
+				textareaInput.value = '';
+			});
+			
+			// Function for filling stamp and closing pop-up window
+			//const context = context;
+			const okBtn = document.querySelector('.ok-btn');
+			okBtn.addEventListener('click', () => {
+				const scale = 3.74;
+				const context = ctx;
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				paintCanvas(sheetWidth, sheetHeight, canvas, scale);
+				fillText(context); // fillText(context)
+				overlay.style.display = 'none';
+				popup.style.display = 'none';
+			});
+			
+			
+			
+			
+			// Functions below are for drawStamp
+			function drawMainBorder(sheetWidth, sheetHeight, zoom, context) {
+			
+				//const divisionBy2 = (number) => number / 2;
+			
+				context.beginPath();
+				context.lineCap = "square";
+				// set the line width to (1 pixel * zoom) = 3.78
+				// Подошло значение = 2.5
+				context.lineWidth = (0.7);
+				
+				//context.beginPath();
+				
+				//context.strokeStyle = 'red';
+				
+				context.moveTo((0), (0));
+				context.lineTo((sheetWidth), (0));
+				
+				context.moveTo((sheetWidth), (0));
+				context.lineTo((sheetWidth), (sheetHeight));
+				
+				context.moveTo((sheetWidth), (sheetHeight));
+				context.lineTo((0), (sheetHeight));
+				
+				context.moveTo((0), (sheetHeight));
+				context.lineTo((0), (0));
+				
+				//context.stroke();
+				
+				
+				// Border of the sheet
+				// position the drawing cursor
+				context.moveTo((20) * zoom, (5) * zoom); // x = 20; y = 5;
+				// draw the line 
+				context.lineTo((sheetWidth - (5)) * zoom, (5) * zoom);  // y = 5;
+				
+				context.moveTo((sheetWidth - (5)) * zoom, (5) * zoom);
+				context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((sheetWidth - (5)) * zoom, (sheetHeight - (5)) * zoom);
+				context.lineTo((20) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
+				context.lineTo((20) * zoom, (5) * zoom);
+				context.stroke();
+			}
+			
+			function drawAndFillTableInv(sheetWidth, sheetHeight, zoom, context) {
+				context.beginPath();
+				context.lineCap = "square";
+				// set the line width to (1 pixel * zoom) = 3.78
+				// Подошло значение = 2.5
+				context.lineWidth = (0.7);
+				
+				// Zoom factor
+				//var zoom = 1;
+				// Horizontal lines
+				context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
+				context.lineTo(((20 - 7 - 5)) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+				context.lineTo(((20 - 7 - 5)) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+				
+				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25 + 35) * zoom));
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - ((5 + 25 + 35)) * zoom));
+				
+				context.moveTo((20) * zoom, (sheetHeight - ((5 + 25 + 35 + 25)) * zoom));
+				context.lineTo((20 - 7 - 5) * zoom, sheetHeight - (5 + 25 + 35 + 25) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+			
+				// Table, which named "Inv. №"
+				// Vertical lines
+				context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7) * zoom, (sheetHeight - (5)) * zoom);
+				context.stroke();
+
+				context.save();
+				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(-Math.PI / 2);
+				// Fill table
+				const textSizeInv = (3.5) * zoom;		
+				context.fillStyle = "black";
+				context.font = `${textSizeInv}px Arial Narrow`;
+				context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
+				context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
+				context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
+				context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
+				context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
+				
+				context.restore();
+			}
+			
+			function drawAndFillTableSpravN(sheetWidth, sheetHeight, zoom, context) {
+				context.beginPath();
+				context.lineCap = "square";
+				// set the line width to (1 pixel * zoom) = 3.78
+				// Подошло значение = 2.5
+				context.lineWidth = (0.7);
+				
+				// Zoom factor
+				//var zoom = 1;
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 287)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+
+				context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+				
+				context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 287)) * zoom);
+				context.lineTo((20 - 7) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+				context.stroke();
+				
+				// Fill the table Sprav №
+				context.save();
+				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(-Math.PI / 2);
+				
+				const textSizeChange = (3.5) * zoom;		
+				context.font = `${textSizeChange}px Arial Narrow`;
+				
+				context.fillText("Справ. №", (287 - 60 - 40) * zoom, (0) * zoom);  // x = 180.4; y = 0;
+				context.fillText("Перв. примен.", (287 - 43) * zoom, (0) * zoom);  // x = 234.7; y = 0;
+			
+				context.restore();
+			}
+			
+			function drawAndFillTableAbove(sheetWidth, sheetHeight, zoom, orientation, context) {
+				// Table above				
+				if (orientation === "landscape" || format === "A4") {
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					context.lineWidth = (0.7);
+					
+					context.moveTo((20) * zoom, (5 + 14) * zoom);
+					context.lineTo((20 + 70 + 14 + 53) * zoom, (5 + 14) * zoom);
+					
+					context.moveTo((20 + 70 + 14 +53) * zoom, (5) * zoom);
+					context.lineTo((20 + 70 + 14 +53) * zoom, (5 + 14) * zoom);
+					
+					context.moveTo((20 + 70) * zoom, (5) * zoom);
+					context.lineTo((20 + 70) * zoom, (5 + 14) * zoom);
+					
+					context.moveTo((20 + 70 + 14) * zoom, (5) * zoom);
+					context.lineTo((20 + 70 + 14) * zoom, (5 + 14) * zoom);
+					
+					context.moveTo((20 + 70 + 14) * zoom, (5 + 7) * zoom);
+					context.lineTo((20 + 70 + 14 + 53) * zoom, (5 + 7) * zoom);
+					context.stroke();
+				} else {
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					context.lineWidth = (0.7);
+					
+					context.moveTo((sheetWidth - (14 + 5)) * zoom, (5) * zoom);
+					context.lineTo((sheetWidth - (14 + 5)) * zoom, (137 + 5) * zoom);
+					
+					context.moveTo((sheetWidth - (5)) * zoom, (5 + 137) * zoom);
+					context.lineTo((sheetWidth - (5 + 14)) * zoom, (5 + 137) * zoom);
+					
+					context.moveTo((sheetWidth - (5)) * zoom, (5 + 70) * zoom);
+					context.lineTo((sheetWidth - (5 + 14)) * zoom, (5 + 70) * zoom);
+					
+					context.moveTo((sheetWidth - (5)) * zoom, (5 + 70 + 14) * zoom);
+					context.lineTo((sheetWidth - (5 + 14)) * zoom, (5 + 70 + 14) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 7)) * zoom, (5 + 70 + 14) * zoom);
+					context.lineTo((sheetWidth - (5 + 7)) * zoom, (5 + 70 + 14 + 53) * zoom);
+					context.stroke();
+				}
+			}
+			
+			function drawAndFillDevTable(sheetWidth, sheetHeight, zoom, designSheet, context) {
+				if (designSheet === 'firstSheet') {
+					// Bold lines
+					context.beginPath();
+					// Border of Dev-Table
+					context.moveTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					
+					context.moveTo((sheetWidth - (5  + 185)) * zoom, (sheetHeight - (5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					
+					// Vertical lines of Dev-Table
+					context.moveTo((sheetWidth - (5 + 185 - 7)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7)) * zoom, ((sheetHeight - (5 + 30)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15)) * zoom, (sheetHeight - (5 + 55)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 + 8)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70)) * zoom, (sheetHeight - (5 + 55 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15)) * zoom, (sheetHeight - (5 + 55 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15)) * zoom, ((sheetHeight - (5 + 55 - 15 - 5 - 15)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17)) * zoom, (sheetHeight - (5 + 55 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17)) * zoom, ((sheetHeight - (5 + 55 - 15 - 5 - 15)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20)) * zoom, ((sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom));
+					
+					// Horizontal lines of Dev-Table
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 35)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 35)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 35 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 35 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 + 8)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 + 8)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 - 15)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70)) * zoom, (sheetHeight - (5 + 55 - 15 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 - 15 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70)) * zoom, (sheetHeight - (5 + 55 - 15 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 - 15 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 50)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15)) * zoom);
+					context.stroke();
+					
+					//Thin lines
+					context.beginPath();
+					// set the line width to (0.5 pixel * zoom) = 1,89
+					// Подошло значение 1
+					//context.lineWidth = 1.25;
+					context.lineWidth = (0.3);
+					context.lineCap = "square";
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 50 - 5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 50 - 5)) * zoom, (sheetHeight - (5 + 15 + 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 50 - 5 - 5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 50 - 5 - 5)) * zoom, (sheetHeight - (5 + 15 + 5)) * zoom);
+					context.stroke();
+					
+				} else {
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					context.lineWidth = (0.7);
+					
+					// Border of Dev-Table
+					context.moveTo((20) * zoom, (5) * zoom);
+					context.lineTo((sheetWidth - (5)) * zoom, ((5) * zoom));
+					
+					context.moveTo((20) * zoom, (5) * zoom);
+					context.lineTo((20) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					// Vertical lines of Dev-Table					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23)) * zoom, ((sheetHeight - (5)) * zoom)); 
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 10 + 110 + 10)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 10 + 110 + 10)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 10)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 10)) * zoom, ((sheetHeight - (5)) * zoom));
+					
+					context.moveTo((sheetWidth - (5 + 185 - 7)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7)) * zoom, (sheetHeight - (5)) * zoom);
+
+					
+					// Horizontal lines of Dev-Table
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 - 10)) * zoom, (sheetHeight - (5 - 8)) * zoom);
+					context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 - 8)) * zoom);
+					
+					context.stroke();
+					
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					context.lineWidth = (0.3);
+					context.lineCap = "square";
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5)) * zoom);
+					
+					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5 - 5)) * zoom);
+					context.lineTo((sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10)) * zoom, (sheetHeight - (5 + 55 - 5 - 5 - 5 - 15 - 5 - 5 - 5 - 5)) * zoom);
+
+					
+					context.stroke();
+					
+				}
+			}
+			
+			function fillStampDevTable(sheetWidth, sheetHeight, zoom, designSheet, context, sheetNumber) {
+				
+				if (designSheet === 'firstSheet') {
+					// Filling the stamp
+					const textSizeDev = (3.5) * zoom;		
+					context.font = `${textSizeDev}px Arial Narrow`;
+					context.fillStyle = "black";
+					context.fillText("Утв.", ((sheetWidth - (5)) - (185 - 1)) * zoom, ((sheetHeight - (5)) - (1)) * zoom);  // x = 26; y = 282.9;
+					context.fillText("Н.контр.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 1)) * zoom);  // x = 26; y = 277.9;
+					context.fillText("Т.контр.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 267.9;
+					context.fillText("Пров.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 262.9;
+					context.fillText("Разраб.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 257.9;
+					context.fillText("Лит.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 157.2; y = 247.9;
+					context.fillText("Масса", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 4.5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 171.5; y = 247.9;
+					context.fillText("Масштаб", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17 - 3)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 187.3; y = 247.9;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
+					context.fillText(`${sheetNumber}`, (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2 - 8)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
+					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 174.5; y = 267.8;
+					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 133.3; y = 287.7;
+					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 173.1; y = 287.7;
+					
+					
+					const textSizeChange = (3.5) * zoom;		
+					context.font = `${textSizeChange}px Arial Narrow`;
+					context.fillStyle = "black";
+					context.fillText("Изм.", (sheetWidth - (5 + 185 - 0.5)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 2)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 34; y = 253;
+					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 5)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 47.8; y = 253;
+					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 4)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 69; y = 253;
+					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 2)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 82; y = 253;
+					
+					
+				} else {					
+					// Filling the stamp
+					const textSizeDev = (3.5) * zoom;		
+					context.font = `${textSizeDev}px Arial Narrow`;
+					context.fillStyle = "black";
+					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1)) * zoom);  // x = 133.3; y = 287.7;
+					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1)) * zoom);  // x = 173.1; y = 287.7;
+					
+					
+					const textSizeChange = (3.5) * zoom;		
+					context.font = `${textSizeChange}px Arial Narrow`;
+					context.fillStyle = "black";
+					context.fillText("Изм.", (sheetWidth - (5 + 185 - 0.5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 8.5 - 0.5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 10 - 2)) * zoom, (sheetHeight - (5 + 8 + 2)) * zoom);  // x = 34; y = 253;
+					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 47.8; y = 253;
+					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 4)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 69; y = 253;
+					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 2)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 82; y = 253;
+				}
+			}
+			
+			function paintCanvas(sheetWidth, sheetHeight, canvas, scale, offsetX = 0, offsetY = 0) {
+			
+				
+			
+				const context = canvas.getContext('2d');
+				
+				// Очищаем canvas от предыдущего содержимого;
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				
+				// Сохраняет текущее состояние контекста ( стили, трансформации ) в стек.
+				// Это нужно, чтобы потом вернуть все как было;
+				context.save();
+				
+				// Начинает новый путь для отсечения ( clipping ). Старые пути не учитываются.
+				//context.beginPath();
+				
+				// Задает прямоугольник для отсечения - весь холст
+				//context.rect(0, 0, canvas.width, canvas.height);
+				
+				// Включает режим отсечения. Теперь все, что выходит за границы этого прямоугольника - не будет рисоваться;
+				//context.clip();
+				
+				context.translate(offsetX, offsetY); // <-- Применяет новое смещение;
+				
+				// Сброс и применение трансформаций;
+				// context.setTransform(scale, 0, 0, scale, 0, 0); // <-- Сбрасывает все трансформации ( масштаб, смещение );
+				context.setTransform(scale, 0, 0, scale, 0, 0); // <-- Сбрасывает все трансформации ( масштаб, смещение );
+				//context.setTransform(1, 0, 0, 1, 0, 0); 
+				
+				
+				canvas.width = sheetWidth * scale;
+				canvas.height = sheetHeight * scale;
+				
+				// scale() - каждый вызов умножается на предыдущий, накопительный эффект;
+				context.scale(scale, scale); // <-- Применяет текущий масштаб;
+				
+				
+				
+				// console.log(canvas.width, canvas.height);
+				
+				context.imageSmoothingEnabled = false; // <-- Отключение сглаживания для пиксельной графики
+				
+				// Normalize coordinate system to use css pixels
+				context.fillStyle = "black";	
+				if (designSheet === 'firstSheet') {
+					context.beginPath();
+					context.lineCap = "square";
+					// Zoom factor
+					const zoom = 1;
+					drawAndFillTableAbove(sheetWidth, sheetHeight, zoom, orientation, context);
+					drawMainBorder(sheetWidth, sheetHeight, zoom, context);	
+					drawAndFillDevTable(sheetWidth, sheetHeight, zoom, designSheet, context);					
+					drawAndFillTableInv(sheetWidth, sheetHeight, zoom, context)
+					drawAndFillTableSpravN(sheetWidth, sheetHeight, zoom, context);
+					context.stroke();
+					fillStampDevTable(sheetWidth, sheetHeight, zoom, designSheet, context, 1);
+				} else if (designSheet === "secondSheet") {
+					context.beginPath();
+					context.lineCap = "square";					
+					// Zoom factor
+					var zoom = 1;
+					drawAndFillTableAbove(sheetWidth, sheetHeight, zoom, orientation, context);
+					drawMainBorder(sheetWidth, sheetHeight, zoom, context);
+					drawAndFillDevTable(sheetWidth, sheetHeight, zoom, designSheet, context);
+					drawAndFillTableInv(sheetWidth, sheetHeight, zoom, context);	
+					context.stroke();
+					fillStampDevTable(sheetWidth, sheetHeight, zoom, designSheet, context, 2);
+				}
+				
+				// Восстанавливает состояние контекста ( убирает отсечение и возвращает предыдущие настройки );
+				context.restore();
+			}
+			
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////
+			const container = document.querySelector('#canvasContainer');
+			const currentCanvas = document.querySelector('#canvas1');
+			const currentCanvasContext = currentCanvas.getContext('2d');
+
+			//let scales = 1;
+			// let scales = 3.61;
+			let scales = 3.74;
+			let isDragging = false; // Flag for tracking drag-and-drop status-bar
+			let startX, startY, scrollLeft, scrollTop;
+			
+			// Mouse click event handler
+			container.addEventListener('mousedown', (e) => {
+				isDragging = true; // Set flag dragging
+				// Get the initial coordinates of the mouse relative to the container
+				startX = e.pageX - container.offsetLeft;
+				startY = e.pageY - container.offsetTop;
+				scrollLeft = container.scrollLeft;
+				scrollTop = container.scrollTop;
+			});
+			
+			// Mouse exit event handler outside the container
+			container.addEventListener('mouseleave', () => {
+				isDragging = false; // Stop dragging
+			});
+			
+			// Mouse button release event handler
+			container.addEventListener('mouseup', () => {
+				isDragging = false; // Stop dragging
+			});
+			
+			// Mouse movement event handler
+			container.addEventListener('mousemove', (e) => {
+				if (!isDragging) {
+					return;  // If don't drag, go out
+				}
+				e.preventDefault(); // Prevent standart behavior
+				// Get the current mouse coordinates relative to the container
+				const x = e.pageX - container.offsetLeft;
+				const y = e.pageY - container.offsetTop;
+				// Calculate distance by which mouse has moved
+				const walkX = x - startX;
+				const walkY = y - startY;
+				// Scroll container to the calculated distance
+				container.scrollLeft = scrollLeft - walkX;
+				//console.log(`currentCanvas.scrollLeft= ${currentCanvas.scrollLeft}`);
+				container.scrollTop = scrollTop - walkY;
+			});
+			
+			
+		// Throttle - это как "тормоз" для другой функции,
+		// чтобы она не срабатывала слишком часто.
+		
+		// Ассоциация с движением мыши.
+		// Первый раз двигаем мышью - функция срабатывает сразу, таймер начинает отсчёт.
+		// Пока таймер идёт - перезаписываем координаты
+		// Когда таймер заканчивается - функция срабатывает с координатами последней точки.
+		// Эту функцию писала я сама;
+		function throttle(callback, time) {
+			let isTimerWorking = false; // Запоминаем, работает ли уже таймер
+			let lastContext = null; // Храним последние данные(lastArgs) и контекст(lastContext)
+			let lastArgs = null;
+			
+			return function(...args) {
+				if (!isTimerWorking) {
+					// Если таймер не работает - выполняем функцию сразу
+					// с текущими данными
+					callback.apply(this, args);
+					isTimerWorking = true;
+					
+					// Включаем таймер (ставим "заморозку")
+					setTimeout(() => {
+						isTimerWorking = false; // Выключам таймер
+						// Если были вызовы во время заморозки - выполняем самый последний
+						if (lastArgs) {
+							callback.apply(lastContext, lastArgs);
+							lastArgs = null;
+							lastContext = null;
+						}
+					}, time);
+				} else {
+					// Если таймер работает
+					// НЕ выполняем функцию сейчас
+					// Просто сохраняем новые данные для будущего выполнения
+					lastArgs = args;
+					lastContext = this;
+				}
+			};
+		}
+		
+		// Использование:
+		/*
+		function handleWheel() {
+			console.log('Triggered!');
+		}
+		*/
+		// 1. Сохраняю возвращаемую функцию
+		//const throttledWheel = throttle(handleWheel, 2000);
+		//throttledFunc(); // Должен вывести Triggered! сразу;
+		// 2. Теперь вызываю сохраненную функцию через переменную;
+		// window.addEventListener('wheel', throttledWheel);
+		
+		
+		// 1. Если canvas увеличивается без смещения центра ( translate ),
+		// его содержимое уходит за пределы viewport;
+		// let scales = 3.74; <-- Текущий масштаб canvas
+		// Такое значение нужно для того, чтобы при первой прокрутке мыши
+		// контекст канваса резко не уменьшался;
+		
+		// Смещение ( трансляция ) canvas относительно начала координат;
+		let offsetX = 0;
+		let offsetY = 0;
+		
+		const throttledWheelHandler = throttle(function(e) {
+		
+			//if (scales < 30) {
+				e.preventDefault();
+			
+				container.style.overflow = "hidden"; // Полностью убираю полосы прокрутки у контейнера для канваса;
+				
+				// mouseX/Y - Координаты курсора внутри canvas;
+				// getBoundingClientRect() - Возвращает размеры и позицию canvas относительно viewport;
+				const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+				const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+				
+				// Определение направления и силы масштабирования;
+				const delta = e.deltaY > 0 ? 0.9 : 1.1; // Множитель;
+				
+				console.log('delta', delta);
+				
+				const newScale = (scales * delta) > 25 ? 25 : (scales * delta);
+				
+				// Коррекция смещения для зума относительно курсора;
+				offsetX = mouseX - ( mouseX - offsetX ) * ( newScale / scales );
+				offsetY = mouseY - ( mouseY - offsetY ) * ( newScale / scales );
+				// Формула выше сохраняет позицию курсора в одной точке canvas при масштабировании;
+				// ( mouseX - offsetX ) - координаты точки относительно текущего смещения;
+				// ( newScale / scales ) - отношение нового масштаба к старому;
+				// mouseX - пересчитывает смещение так, чтобы выбранная точка оставалась под курсором;
+				
+				scales = newScale;
+				console.log('scales', scales);
+				// scales = Math.min(Math.max(0.1, scale), 10);
+				paintCanvas(sheetWidth, sheetHeight, currentCanvas, scales, offsetX, offsetY);
+			//}
+			
+			
+		}, 1); // <-- Выполнение функции происходит не на каждый скролл, а каждые 10 миллисекунд; Это значение можно уменьшить;
+
+		container.addEventListener('wheel', throttledWheelHandler, { passive: false });
+	}
+	</script>
+  </body>
+</html>
