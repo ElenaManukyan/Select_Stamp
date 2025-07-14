@@ -12,6 +12,7 @@
 				display: none;
 			}
 		}
+		
 
 		.header {
 		    display: flex;
@@ -385,24 +386,26 @@
   <body>
 	<div class="header">
 		
-		<button id="prev" class="navHeadButtons">Назад</button>
-		<button id="next" class="navHeadButtons">Вперёд</button>
-		
-		
-		<div id="searchPage">
-		
-			<div class="headerPages">
-				<p id="currentPage">Текущая страница: 1</p>
-				<p id="totalPages">Страниц в документе: 1</p>
+		<!--
+			<button id="prev" class="navHeadButtons">Назад</button>
+			<button id="next" class="navHeadButtons">Вперёд</button>
+		-->
+		<!--
+			<div id="searchPage">
+			
+				<div class="headerPages">
+					<p id="currentPage">Текущая страница: 1</p>
+					<p id="totalPages">Страниц в документе: 1</p>
+				</div>
+			
+				<label>Открыть страницу:</label>
+				<input id="findSheet" type="text">
+				<button id="startSearch" class="navHeadButtons">Открыть</button>
+				
+				
+				<select id="canvasSelect"></select>
 			</div>
-		
-			<label>Открыть страницу:</label>
-			<input id="findSheet" type="text">
-			<button id="startSearch" class="navHeadButtons">Открыть</button>
-			
-			
-			<select id="canvasSelect"></select>
-		</div>
+		-->
 	</div>
 	<div class="canvasAndMenu">
 		<div id="canvasContainer">
@@ -446,7 +449,9 @@
 				<button class="printButton">Печать</button>
 				<span id="descriptionText"></span>
 				<button id="openPopup" class="bigButtons">Заполнить штамп</button>
-				<button id="addSheet" class="bigButtons">Добавить лист</button>
+				<!--
+					<button id="addSheet" class="bigButtons">Добавить лист</button>
+				-->
 				<div id="overlay" class="overlay"></div>
 				<div id="popup" class="popup">
 					<div class="popup-header">
@@ -670,6 +675,7 @@
 			let format;
 			let orientation;
 			let designSheet;
+			let scale;
 			
 			
 			// Function for get DPI current device
@@ -718,15 +724,17 @@
 						designSheet = "firstSheet";
 						sheetWidthMM = 210;
 						sheetHeightMM = 297;
+						scale = 3;
 						break;
 					case "A3":
 						format = "A3";
 						sheetWidth = 420;
 						sheetHeight = 297;
-						orientation = "landscape";
+						orientation = "portrait";
 						designSheet = "firstSheet";
 						sheetWidthMM = 420;
 						sheetHeightMM = 297;
+						scale = 3;
 						break;
 					case "A2":
 						format = "A2";
@@ -736,6 +744,7 @@
 						designSheet = "firstSheet";
 						sheetWidthMM = 420;
 						sheetHeightMM = 594;
+						scale = 3;
 						break;
 					case "A1":
 						format = "A1";
@@ -745,43 +754,78 @@
 						designSheet = "firstSheet";
 						sheetWidthMM = 594;
 						sheetHeightMM = 841;
+						scale = 3;
 						break;
 				}
 			}
 			
 			// Get the 'select' element
 			const paperFormat = document.getElementById('paper-format');
+			
 			// Processing event change select
 			paperFormat.addEventListener('change', function() {
+
+				const radioButtons = document.querySelectorAll('input[name="orientation"]');
+				radioButtons.forEach((radio) => {
+					radio.checked = false;
+				});
+
+				const radioButtonsDesignSheet = document.querySelectorAll('input[name="design"]');
+				radioButtonsDesignSheet.forEach((radio) => {
+					radio.checked = false;
+				});
+
 				const activeCanvas = document.querySelector('#canvas1');
 				const context = activeCanvas.getContext('2d');
-				const scale = 3.74;
+				
+				// Сброс всех трансформаций
+				activeCanvas.style.transform = 'none';
+				activeCanvas.style.left = '0';
+				activeCanvas.style.top = '0';
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				
+				//const scale = 3;
 				const selectedFormat = this.value;
-				selectFormat(selectedFormat);
-				activeCanvas.style.transformOrigin = 'top left';
-				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
-				activeCanvas.style.transformOrigin = 'top left';
-				activeCanvas.style.transform = 'scale(0.19)';
-				const canvasContainer = document.querySelector('#canvasContainer');	
-				canvasContainer.style.width = `${activeCanvas.width * 0.2}px`;
-				canvasContainer.style.height = `${activeCanvas.height * 0.2}px`;
+				
+				// Проверка выбранного формата
+				if(!selectedFormat) return;
+				
+				try {
+					selectFormat(selectedFormat);
+					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+					
+					console.log(`orientation= ${orientation}`);
 
+					// Проверка размеров перед отрисовкой
+					if(sheetWidth > 0 && sheetHeight > 0) {
+						paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+					} else {
+						console.error('Некорректные размеры:', sheetWidth, sheetHeight);
+					}
+				} catch (error) {
+					console.error('Ошибка при изменении формата:', error);
+				}
 			});
-			
+						
 			function initialCanvas() {
 				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
 				const context = activeCanvas.getContext('2d');
-				const scale = 3.74;				
+				
+				// const scale = 3.74;				
+				// const scale = 3;
+
 				activeCanvas.style.transformOrigin = 'top left';
 				selectFormat(paperFormat.value);
 				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-				
-				
-				
+
 				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
 				
 				const canvasContainer = document.querySelector('#canvasContainer');				
+				/*
+				canvasContainer.style.width = `${sheetWidth * scale}px`;
+				canvasContainer.style.height = `${sheetHeight * scale}px`;
+				*/
+
 				canvasContainer.style.width = `${sheetWidth * scale}px`;
 				canvasContainer.style.height = `${sheetHeight * scale}px`;
 				
@@ -792,43 +836,47 @@
 			initialCanvas();
 			
 			function selectOrientation(valueOfOrientation) {
-				const scale = 3.74;
 				const context = ctx;
-				let newSheetHeight;
-				let newSheetWidth;
+				
+				// Сохраняю исходные размеры
+				const originalWidth = sheetWidth;
+				const originalHeight = sheetHeight;
+				
 				switch(valueOfOrientation) {
-					case "landscape": 
-						if (format !== "A4") {
-							newSheetWidth = Math.max(sheetWidth, sheetHeight);
-							newSheetHeight = Math.min(sheetWidth, sheetHeight);
-							context.clearRect(0, 0, canvas.width, canvas.height);
-							// paintCanvas(sheetWidth, sheetHeight, canvas);
-							paintCanvas(newSheetWidth, newSheetHeight, canvas, scale);
-							break;
-						}
+					case "landscape":
+						// Для всех форматов, кроме A4
+						//if (format !== "A4") {
+							sheetWidth = Math.max(originalWidth, originalHeight);
+							sheetHeight = Math.min(originalWidth, originalHeight);
+						//}
+						break;
+						
 					case "portrait":
-						newSheetWidth = Math.min(sheetWidth, sheetHeight);
-						newSheetHeight = Math.max(sheetWidth, sheetHeight);
-						context.clearRect(0, 0, canvas.width, canvas.height);
-						// paintCanvas(sheetWidth, sheetHeight, canvas, sheetWidthMM, sheetHeightMM);
-						paintCanvas(newSheetWidth, newSheetHeight, canvas, scale);
+						sheetWidth = Math.min(originalWidth, originalHeight);
+						sheetHeight = Math.max(originalWidth, originalHeight);
 						break;
 				}
+				
+				// Всегда производить очистку и перерисовку
+				context.clearRect(0, 0, canvas.width, canvas.height);
+				paintCanvas(sheetWidth, sheetHeight, canvas, scale);
 			}
 
+			// Обработчики событий (оставляем без изменений)
 			var orientLandscapeRadioBtn = document.getElementById('landscape');
 			var orientPortraitRadioBtn = document.getElementById('portrait');
+
 			orientLandscapeRadioBtn.addEventListener('click', function() {
 				if (orientLandscapeRadioBtn.checked) {
 					orientation = "landscape";
-					selectOrientation(orientLandscapeRadioBtn.value);
+					selectOrientation("landscape");
 				}
 			});
-			
+
 			orientPortraitRadioBtn.addEventListener('click', function() {
 				if (orientPortraitRadioBtn.checked) {
 					orientation = "portrait";
-					selectOrientation(orientPortraitRadioBtn.value);
+					selectOrientation("portrait");
 				}
 			});
 			
@@ -836,20 +884,17 @@
 			function selectDesign(valueOfDesignSheet) {
 				const activeCanvas = document.querySelector('#canvas1');
 				const context = activeCanvas.getContext('2d');
-				const scale = 3.74;
 				if (valueOfDesignSheet === "secondSheet") {
 					activeCanvas.style.transformOrigin = 'top left';
 					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
 					designSheet = "secondSheet";
 					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
 					fillTextFromLocalStorage(context);
-				} else if (valueOfDesignSheet === "firstSheet") {
-				
+				} else if (valueOfDesignSheet === "firstSheet") {	
 					designSheet = "firstSheet";
 					activeCanvas.style.transformOrigin = 'top left';
 					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
-					
+					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);					
 				}
 			}
 			
@@ -865,8 +910,7 @@
 				if (secondSheet.checked) {
 					selectDesign(secondSheet.value);
 				} 
-			});
-			
+			});			
 			
 			
 			// Function for printing
@@ -928,13 +972,13 @@
 				
 			});
 
-			
+			/*
 			// Handler for addind new sheet to document
-			let numOfBtn = 2;
-			
 			const addSheet = document.querySelector('#addSheet');
 			const canvasesData = []; // This array is for storage all created canvases
 			addSheet.addEventListener('click', () => {
+
+				let numOfBtn = 2;
 			
 				const mainCanvas = document.querySelector('#canvas1');
 				const canvasContainer = document.querySelector('#canvasContainer');
@@ -998,23 +1042,25 @@
 				totalPages.innerHTML = `Страниц в документе: ${totalPagesPlus1}`;
 				
 			});
+			*/
 			
 			
 			let currentIndex = 0;
-			
-			document.querySelector('#prev').addEventListener('click', function() {
-				if (currentIndex > 0) {
-					currentIndex -= 1;
-					updateVisibleCanvas();
-				}
-			});
-			
-			document.querySelector('#next').addEventListener('click', function() {
-				if (currentIndex < canvasArray.length - 1) {
-					currentIndex += 1;
-					updateVisibleCanvas();
-				}
-			});
+			/*
+				document.querySelector('#prev').addEventListener('click', function() {
+					if (currentIndex > 0) {
+						currentIndex -= 1;
+						updateVisibleCanvas();
+					}
+				});
+				
+				document.querySelector('#next').addEventListener('click', function() {
+					if (currentIndex < canvasArray.length - 1) {
+						currentIndex += 1;
+						updateVisibleCanvas();
+					}
+				});
+			*/
 			
 			
 			function updateVisibleCanvas() {
@@ -1573,100 +1619,114 @@
 			}
 			
 			function drawAndFillTableInv(sheetWidth, sheetHeight, zoom, context) {
-				context.beginPath();
-				context.lineCap = "square";
-				// set the line width to (1 pixel * zoom) = 3.78
-				// Подошло значение = 2.5
-				context.lineWidth = (0.7);
+				if (orientation === "landscape" && format === "A4") {
+					return;
+				} else {
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					// Подошло значение = 2.5
+					context.lineWidth = (0.7);
+					
+					// Zoom factor
+					//var zoom = 1;
+					// Horizontal lines
+					context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
+					context.lineTo(((20 - 7 - 5)) * zoom, (sheetHeight - (5)) * zoom);
+					
+					context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+					context.lineTo(((20 - 7 - 5)) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+					
+					context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25 + 35) * zoom));
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - ((5 + 25 + 35)) * zoom));
+					
+					context.moveTo((20) * zoom, (sheetHeight - ((5 + 25 + 35 + 25)) * zoom));
+					context.lineTo((20 - 7 - 5) * zoom, sheetHeight - (5 + 25 + 35 + 25) * zoom);
+					
+					context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+					
+					context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
 				
-				// Zoom factor
-				//var zoom = 1;
-				// Horizontal lines
-				context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
-				context.lineTo(((20 - 7 - 5)) * zoom, (sheetHeight - (5)) * zoom);
-				
-				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
-				context.lineTo(((20 - 7 - 5)) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
-				
-				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25 + 35) * zoom));
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - ((5 + 25 + 35)) * zoom));
-				
-				context.moveTo((20) * zoom, (sheetHeight - ((5 + 25 + 35 + 25)) * zoom));
-				context.lineTo((20 - 7 - 5) * zoom, sheetHeight - (5 + 25 + 35 + 25) * zoom);
-				
-				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
-				
-				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-			
-				// Table, which named "Inv. №"
-				// Vertical lines
-				context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5)) * zoom);
-				
-				context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-				context.lineTo((20 - 7) * zoom, (sheetHeight - (5)) * zoom);
-				context.stroke();
+					// Table, which named "Inv. №"
+					// Vertical lines
+					context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5)) * zoom);
+					
+					context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+					context.lineTo((20 - 7) * zoom, (sheetHeight - (5)) * zoom);
+					context.stroke();
 
-				context.save();
-				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
-				context.rotate(-Math.PI / 2);
-				// Fill table
-				const textSizeInv = (3.5) * zoom;		
-				context.fillStyle = "black";
-				context.font = `${textSizeInv}px Arial Narrow`;
-				context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
-				context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
-				context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
-				context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
-				context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
-				
-				context.restore();
+					context.save();
+					context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+					context.rotate(-Math.PI / 2);
+					// Fill table
+					const textSizeInv = (3.5) * zoom;		
+					context.fillStyle = "black";
+					context.font = `${textSizeInv}px Arial Narrow`;
+					context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
+					context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
+					context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
+					context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
+					context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
+					
+					context.restore();
+				}
 			}
 			
 			function drawAndFillTableSpravN(sheetWidth, sheetHeight, zoom, context) {
-				context.beginPath();
-				context.lineCap = "square";
-				// set the line width to (1 pixel * zoom) = 3.78
-				// Подошло значение = 2.5
-				context.lineWidth = (0.7);
-				
-				// Zoom factor
-				//var zoom = 1;
-				context.moveTo((20) * zoom, (sheetHeight - (5 + 287)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
-				
-				context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
-				
-				context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+				if (orientation === "landscape" && format === "A4") {
+					return;
+				} else {
+					context.beginPath();
+					context.lineCap = "square";
+					// set the line width to (1 pixel * zoom) = 3.78
+					// Подошло значение = 2.5
+					context.lineWidth = (0.7);
+					
+					// Zoom factor
+					//var zoom = 1;
+					context.moveTo((20) * zoom, (sheetHeight - (5 + 287)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
+					
+					context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60)) * zoom);
+					
+					context.moveTo((20) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
 
-				context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
-				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+					context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287)) * zoom);
+					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+					
+					context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 287)) * zoom);
+					context.lineTo((20 - 7) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
+					context.stroke();
+					
+					// Fill the table Sprav №
+					context.save();
+					context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+					context.rotate(-Math.PI / 2);
+					
+					const textSizeChange = (3.5) * zoom;		
+					context.font = `${textSizeChange}px Arial Narrow`;
+					
+					context.fillText("Справ. №", (287 - 60 - 40) * zoom, (0) * zoom);  // x = 180.4; y = 0;
+					context.fillText("Перв. примен.", (287 - 43) * zoom, (0) * zoom);  // x = 234.7; y = 0;
 				
-				context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 287)) * zoom);
-				context.lineTo((20 - 7) * zoom, (sheetHeight - (5 + 287 - 60 - 60)) * zoom);
-				context.stroke();
-				
-				// Fill the table Sprav №
-				context.save();
-				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
-				context.rotate(-Math.PI / 2);
-				
-				const textSizeChange = (3.5) * zoom;		
-				context.font = `${textSizeChange}px Arial Narrow`;
-				
-				context.fillText("Справ. №", (287 - 60 - 40) * zoom, (0) * zoom);  // x = 180.4; y = 0;
-				context.fillText("Перв. примен.", (287 - 43) * zoom, (0) * zoom);  // x = 234.7; y = 0;
-			
-				context.restore();
+					context.restore();
+				}
 			}
 			
+
+			// Тут какая-то дичь
 			function drawAndFillTableAbove(sheetWidth, sheetHeight, zoom, orientation, context) {
-				// Table above				
-				if (orientation === "landscape" || format === "A4") {
+				// Table above
+				// if (orientation === "landscape" && format === "A4") {
+				if (orientation === "landscape") {
+					//return;
+				//} else {				
+				//if (orientation === "landscape" || format === "A4") {
 					context.beginPath();
 					context.lineCap = "square";
 					// set the line width to (1 pixel * zoom) = 3.78
@@ -1828,7 +1888,10 @@
 					context.moveTo((20) * zoom, (5) * zoom);
 					context.lineTo((20) * zoom, ((sheetHeight - (5)) * zoom));
 					
-					// Vertical lines of Dev-Table					
+					// Vertical lines of Dev-Table
+					context.moveTo((sheetWidth - (185 + 5)) * zoom, (sheetHeight - (5 + 15)) * zoom);
+					context.lineTo((sheetWidth - (185 + 5)) * zoom, (sheetHeight - (5)) * zoom);
+					
 					context.moveTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5 + 15)) * zoom);
 					context.lineTo((sheetWidth - (5 + 185 - 7 - 10)) * zoom, (sheetHeight - (5)) * zoom);
 					
@@ -1852,8 +1915,8 @@
 					context.moveTo((sheetWidth - (5 + 185)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
 					context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 + 55 - 15 - 5 - 15 - 5)) * zoom);
 					
-					context.moveTo((sheetWidth - (5 - 10)) * zoom, (sheetHeight - (5 - 8)) * zoom);
-					context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 - 8)) * zoom);
+					context.moveTo((sheetWidth - (5 + 10)) * zoom, (sheetHeight - (5 + 8)) * zoom);
+					context.lineTo((sheetWidth - (5)) * zoom, (sheetHeight - (5 + 8)) * zoom);
 					
 					context.stroke();
 					
@@ -1930,8 +1993,6 @@
 			
 			function paintCanvas(sheetWidth, sheetHeight, canvas, scale, offsetX = 0, offsetY = 0) {
 			
-				
-			
 				const context = canvas.getContext('2d');
 				
 				// Очищаем canvas от предыдущего содержимого;
@@ -1957,15 +2018,11 @@
 				context.setTransform(scale, 0, 0, scale, 0, 0); // <-- Сбрасывает все трансформации ( масштаб, смещение );
 				//context.setTransform(1, 0, 0, 1, 0, 0); 
 				
-				
 				canvas.width = sheetWidth * scale;
 				canvas.height = sheetHeight * scale;
 				
 				// scale() - каждый вызов умножается на предыдущий, накопительный эффект;
 				context.scale(scale, scale); // <-- Применяет текущий масштаб;
-				
-				
-				
 				// console.log(canvas.width, canvas.height);
 				
 				context.imageSmoothingEnabled = false; // <-- Отключение сглаживания для пиксельной графики
@@ -2003,52 +2060,48 @@
 			
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////
+			// let scales = 3;
+			
 			const container = document.querySelector('#canvasContainer');
 			const currentCanvas = document.querySelector('#canvas1');
-			const currentCanvasContext = currentCanvas.getContext('2d');
 
-			//let scales = 1;
-			// let scales = 3.61;
-			let scales = 3.74;
-			let isDragging = false; // Flag for tracking drag-and-drop status-bar
-			let startX, startY, scrollLeft, scrollTop;
-			
-			// Mouse click event handler
+			// Установка необходимых стилей
+			container.style.position = 'relative';
+			container.style.overflow = 'hidden'; // Скрыть всё за пределами контейнера
+			currentCanvas.style.position = 'absolute';
+
+			let isDragging = false;
+			let startX, startY, canvasStartX, canvasStartY;
+
+			// Начало перетаскивания
 			container.addEventListener('mousedown', (e) => {
-				isDragging = true; // Set flag dragging
-				// Get the initial coordinates of the mouse relative to the container
-				startX = e.pageX - container.offsetLeft;
-				startY = e.pageY - container.offsetTop;
-				scrollLeft = container.scrollLeft;
-				scrollTop = container.scrollTop;
+				isDragging = true;
+				startX = e.clientX;
+				startY = e.clientY;
+				canvasStartX = parseInt(currentCanvas.style.left) || 0;
+				canvasStartY = parseInt(currentCanvas.style.top) || 0;
+				currentCanvas.style.cursor = 'grabbing'; // Меняем курсор
 			});
-			
-			// Mouse exit event handler outside the container
-			container.addEventListener('mouseleave', () => {
-				isDragging = false; // Stop dragging
-			});
-			
-			// Mouse button release event handler
-			container.addEventListener('mouseup', () => {
-				isDragging = false; // Stop dragging
-			});
-			
-			// Mouse movement event handler
+
+			// Завершение перетаскивания
+			const stopDrag = () => {
+				isDragging = false;
+				currentCanvas.style.cursor = 'grab';
+			};
+			container.addEventListener('mouseup', stopDrag);
+			container.addEventListener('mouseleave', stopDrag);
+
+			// Процесс перетаскивания
 			container.addEventListener('mousemove', (e) => {
-				if (!isDragging) {
-					return;  // If don't drag, go out
-				}
-				e.preventDefault(); // Prevent standart behavior
-				// Get the current mouse coordinates relative to the container
-				const x = e.pageX - container.offsetLeft;
-				const y = e.pageY - container.offsetTop;
-				// Calculate distance by which mouse has moved
-				const walkX = x - startX;
-				const walkY = y - startY;
-				// Scroll container to the calculated distance
-				container.scrollLeft = scrollLeft - walkX;
-				//console.log(`currentCanvas.scrollLeft= ${currentCanvas.scrollLeft}`);
-				container.scrollTop = scrollTop - walkY;
+				if (!isDragging) return;
+				e.preventDefault();
+
+				const dx = e.clientX - startX;
+				const dy = e.clientY - startY;
+
+				// Свободное перемещение без ограничений
+				currentCanvas.style.left = `${canvasStartX + dx}px`;
+				currentCanvas.style.top = `${canvasStartY + dy}px`;
 			});
 			
 			
@@ -2130,22 +2183,22 @@
 				// Определение направления и силы масштабирования;
 				const delta = e.deltaY > 0 ? 0.9 : 1.1; // Множитель;
 				
-				console.log('delta', delta);
+				// console.log('delta', delta);
 				
-				const newScale = (scales * delta) > 25 ? 25 : (scales * delta);
+				const newScale = (scale * delta) > 25 ? 25 : (scale * delta);
 				
 				// Коррекция смещения для зума относительно курсора;
-				offsetX = mouseX - ( mouseX - offsetX ) * ( newScale / scales );
-				offsetY = mouseY - ( mouseY - offsetY ) * ( newScale / scales );
+				offsetX = mouseX - ( mouseX - offsetX ) * ( newScale / scale );
+				offsetY = mouseY - ( mouseY - offsetY ) * ( newScale / scale );
 				// Формула выше сохраняет позицию курсора в одной точке canvas при масштабировании;
 				// ( mouseX - offsetX ) - координаты точки относительно текущего смещения;
 				// ( newScale / scales ) - отношение нового масштаба к старому;
 				// mouseX - пересчитывает смещение так, чтобы выбранная точка оставалась под курсором;
 				
-				scales = newScale;
-				console.log('scales', scales);
+				scale = newScale;
+				console.log('scale', scale);
 				// scales = Math.min(Math.max(0.1, scale), 10);
-				paintCanvas(sheetWidth, sheetHeight, currentCanvas, scales, offsetX, offsetY);
+				paintCanvas(sheetWidth, sheetHeight, currentCanvas, scale, offsetX, offsetY);
 			//}
 			
 			
