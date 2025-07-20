@@ -670,8 +670,6 @@
 			
 			let sheetWidth;
 			let sheetHeight;
-			let sheetWidthMM;
-			let sheetHeightMM;
 			let format;
 			let orientation;
 			let designSheet;
@@ -722,18 +720,14 @@
 						sheetHeight = 297;
 						orientation = "portrait";
 						designSheet = "firstSheet";
-						sheetWidthMM = 210;
-						sheetHeightMM = 297;
 						scale = 3;
 						break;
 					case "A3":
 						format = "A3";
-						sheetWidth = 420;
-						sheetHeight = 297;
+						sheetWidth = 297;
+						sheetHeight = 420;
 						orientation = "portrait";
 						designSheet = "firstSheet";
-						sheetWidthMM = 420;
-						sheetHeightMM = 297;
 						scale = 3;
 						break;
 					case "A2":
@@ -742,8 +736,6 @@
 						sheetHeight = 594;
 						orientation = "portrait";
 						designSheet = "firstSheet";
-						sheetWidthMM = 420;
-						sheetHeightMM = 594;
 						scale = 3;
 						break;
 					case "A1":
@@ -752,8 +744,6 @@
 						sheetHeight = 841;
 						orientation = "portrait";
 						designSheet = "firstSheet";
-						sheetWidthMM = 594;
-						sheetHeightMM = 841;
 						scale = 3;
 						break;
 				}
@@ -806,32 +796,247 @@
 					console.error('Ошибка при изменении формата:', error);
 				}
 			});
+
+			function fillTextFunc(context) {
+				
+				const zoom = 1;
+
+				const savedData = localStorage.getItem('entriesDevTable');
+				
+				const entriesDevTable = JSON.parse(savedData);
+
+				const {
+					developer,
+					inspector,
+					techControl,
+					normControl,
+					approving,
+					weight,
+					scaleText,
+					material,
+					O,
+					O1,
+					O2,
+					sheet,
+					sheets,
+					decimalNumber,
+					firstApplication,
+					inventoryNum,
+					vzamInvNum,
+					invNumDubl,
+					SpravNum,
+					decimalNumAbove,
+					litera1Above,
+					litera2Above,
+					signCustomer,
+					numberInput,
+					changeSheet,
+					numDoc,
+					name,
+					nameOrg,
+					IdCustomer
+				} = entriesDevTable;
+				
+				console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+
+				function variationInsertTop() {
+					if (format === "A4" || orientation === "landscape") {
+
+						context.save();
+						context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
+						context.rotate(Math.PI / 1);
+						context.font = `${9 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
+						//
+						context.fillText(decimalNumAbove, ((20 - 70 - 5) - (decimalNumAboveWidth / 2)), (5));  // x = 26; y = 257.9;				
+						context.restore();
+
+						context.save();
+						context.font = `${9 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						const signCustomerWidth = context.measureText(signCustomer).width;
+						//
+						context.fillText(signCustomer, ((20 + 70 + 7) - (signCustomerWidth / 2)) * zoom, (5 + 7 + 3) * zoom);  // x = 26; y = 257.9;
+						context.restore();
+
+						context.save();
+						context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
+						context.rotate(Math.PI / 1);
+						context.font = `${5.5 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						//
+						const litera1AboveWidth = context.measureText(litera1Above).width;
+						context.fillText(litera1Above, ((20 - 70 - 5 - 14 - 35 - 26.5 - (litera1AboveWidth / 2))) * zoom, (8) * zoom);  // x = 26; y = 257.9;
+						const litera2AboveWidth = context.measureText(litera2Above).width;
+						//
+						context.fillText(litera2Above, ((20 - 70 - 5 - 14 - 35 - 26.5) - (litera2AboveWidth / 2)) * zoom, (5 - 4) * zoom);  // x = 26; y = 257.9;
+						context.restore();
+					} else {
+						context.save();
+						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
+						context.rotate(- Math.PI / 2);
+						context.font = `${9 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
+						context.fillText(decimalNumAbove, ((0 - 40) - (decimalNumAboveWidth / 2)), (0 - 9));  // x = 26; y = 257.9;				
+						context.restore();
+
+						context.save();
+						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
+						context.rotate(Math.PI / 2);
+						context.font = `${9 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						const signCustomerWidth = context.measureText(signCustomer).width;
+						context.fillText(signCustomer, ((82) - (signCustomerWidth / 2)), (15));  // x = 26; y = 257.9;
+						context.restore();
+
+						context.save();
+						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
+						context.rotate(Math.PI / 2);
+						context.font = `${5.5 * zoom}px Arial Narrow`;
+						context.fillStyle = "blue";
+						const litera1AboveWidth = context.measureText(litera1Above).width;
+						context.fillText(litera1Above, ((115) - (litera1AboveWidth / 2)), (17.5));  // x = 26; y = 257.9;
+						const litera2AboveWidth = context.measureText(litera2Above).width;
+						context.fillText(litera2Above, ((115) - (litera2AboveWidth / 2)), (10.5));  // x = 26; y = 257.9;
+						context.restore();
+
+					}
+				}
+
+				// Fill the canvas
+				context.save();
+				context.font = `${9 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				const decNumWidthText = context.measureText(decimalNumber).width;
+				context.fillText(decimalNumber, ((sheetWidth - 5) - 60 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
+				context.restore();
+		
+				// // //
+				variationInsertTop();
+
+				context.save();
+				context.font = `${3.5 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+
+				context.fillText(O, ((sheetWidth - 5) - 50 + 2) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				context.fillText(O1, ((sheetWidth - 5) - 50 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				context.fillText(O2, ((sheetWidth - 5) - 50 + 5 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+			
+				const txtWidth = context.measureText(weight).width;
+				context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 9 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
+				
+				const txtScaleWidth = context.measureText(scaleText).width;
+				context.fillText(scaleText, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
+				context.restore();
+				
+				context.save();
+				context.translate((17.5) * zoom, ((sheetHeight - 5) * zoom));  // x = 16.7; y = 280.3;
+				context.rotate(-Math.PI / 2);
+				// Fill table
+				const textSizeInv = 3.5 * zoom;		
+				context.fillStyle = "blue";
+				context.font = `${textSizeInv}px Arial Narrow`;
+
+				const invNumWidth = context.measureText(inventoryNum).width;
+				context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
+				const vzamInvNumWidth = context.measureText(vzamInvNum).width;
+				context.fillText(vzamInvNum, (12.5 + 35 + 25 - (vzamInvNumWidth / 2)), (0));  // x = 60; y = 0;
+				const invNumDublWidth = context.measureText(invNumDubl).width;
+				context.fillText(invNumDubl, (12.5 + 35 + 25 + 25 - (invNumDublWidth / 2)), 0);  // x = 85.2; y = 0;
+				
+				if ((orientation === "landscape" && format !== "A4" && designSheet === "firstSheet") || (orientation === "portrait" && designSheet === "firstSheet")) {
+					const SpravNumWidth = context.measureText(SpravNum).width;
+					context.fillText(SpravNum, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 - (SpravNumWidth / 2)), 0);  // x = 180.4; y = 0;		
+					const firstApplicationWidth = context.measureText(firstApplication).width;
+					context.fillText(firstApplication, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 + 60 - (firstApplicationWidth / 2)), 0);  // x = 234.7; y = 0;
+				}
+
+				context.restore();
+				
+				context.font = `${3.5 * zoom}px Arial Narrow`;
+				context.fillStyle = "blue";
+				
+				context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 154; y = 267.8;
+				context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 174.5; y = 267.8;
+				
+				context.save();
+				// Zoom factor
+				const textSizeDev = 3.5 * zoom;		
+				context.font = `${textSizeDev}px Arial Narrow`;
+				context.fillStyle = "blue";
+				
+				if (designSheet === "firstSheet") {
+					context.fillText(developer, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;
+					context.fillText(approving, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5 - 1)) * zoom);  // x = 26; y = 282.9;
+					context.fillText(normControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 277.9;
+					context.fillText(techControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 267.9;
+					context.fillText(inspector, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 262.9;
+				}
+				
+				const numberInputWidth = context.measureText(numberInput).width;
+				context.fillText(numberInput, ((sheetWidth - 5) - 185 + 4 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+				
+				const changeSheetWidth = context.measureText(changeSheet).width;
+				context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 4 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+
+				const numDocWidth = context.measureText(numDoc).width;	
+				context.fillText(numDoc, ((sheetWidth - 5) - 185 + 4 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+				
+				const IdCustomerWidth = context.measureText(IdCustomer).width;
+				context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
+				
+				const textSizeMainTitle = 5 * zoom;	
+				context.font = `${textSizeMainTitle}px Arial Narrow`;
+				context.fillStyle = "blue";	
+
+				const materialWidth = context.measureText(material).width;
+				context.fillText(material, ((sheetWidth - 5) - 50 - 70 + 35 - (materialWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+				
+				const nameOrgWidth = context.measureText(nameOrg).width;
+				context.fillText(nameOrg, ((sheetWidth - 5) - 50 + 25 - (nameOrgWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+				
+				// TextArea 'name' with \n
+				const nameLines = name.split('\n');
+				const lineHeight = 5;
+				
+				let textWidth = context.measureText(name).width;
+				let x = ((sheetWidth - 5) - 50 - 70 + 35) * zoom;
+				let y = ((sheetHeight - 5) - 15 - 12.5)  * zoom;
+				for (let i = 0; i < nameLines.length; i += 1) {
+					const line = nameLines[i];
+					textWidth = context.measureText(line).width;
+					x -= textWidth / 2;
+					context.fillText(line, x, y);
+					y += lineHeight;
+					x += textWidth / 2;
+				}
+				context.restore();
+			}
 						
 			function initialCanvas() {
 				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
 				const context = activeCanvas.getContext('2d');
 				
-				// const scale = 3.74;				
-				// const scale = 3;
+				console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+				
+				
 
 				activeCanvas.style.transformOrigin = 'top left';
 				selectFormat(paperFormat.value);
 				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
 
 				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+
+				if (localStorage.length > 0) {
+					fillTextFunc(context);
+				}
 				
 				const canvasContainer = document.querySelector('#canvasContainer');				
-				/*
-				canvasContainer.style.width = `${sheetWidth * scale}px`;
-				canvasContainer.style.height = `${sheetHeight * scale}px`;
-				*/
 
 				canvasContainer.style.width = `${sheetWidth * scale}px`;
 				canvasContainer.style.height = `${sheetHeight * scale}px`;
-				
-				
-				// Если оставить, то канвас в окне будет маленьким, но на большом листе
-				// activeCanvas.style.transform = 'scale(0.19)'; 				
 			}
 			initialCanvas();
 			
@@ -870,6 +1075,15 @@
 				if (orientLandscapeRadioBtn.checked) {
 					orientation = "landscape";
 					selectOrientation("landscape");
+
+					if (localStorage.length > 0) {
+						const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
+						const context = activeCanvas.getContext('2d');
+
+						//context.clearRect(0, 0, canvas.width, canvas.height);
+						//paintCanvas(sheetWidth, sheetHeight, canvas, scale);
+						fillTextFunc(context); // fillText(context)
+					}
 				}
 			});
 
@@ -877,6 +1091,15 @@
 				if (orientPortraitRadioBtn.checked) {
 					orientation = "portrait";
 					selectOrientation("portrait");
+
+					if (localStorage.length > 0) {
+						const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
+						const context = activeCanvas.getContext('2d');
+
+						//context.clearRect(0, 0, canvas.width, canvas.height);
+						//paintCanvas(sheetWidth, sheetHeight, canvas, scale);
+						fillText(context); // fillText(context)
+					}
 				}
 			});
 			
@@ -885,16 +1108,19 @@
 				const activeCanvas = document.querySelector('#canvas1');
 				const context = activeCanvas.getContext('2d');
 				if (valueOfDesignSheet === "secondSheet") {
+					
 					activeCanvas.style.transformOrigin = 'top left';
 					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
 					designSheet = "secondSheet";
+					// console.log(`designSheet= ${designSheet}`);
 					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
-					fillTextFromLocalStorage(context);
+					fillTextFunc(context);
 				} else if (valueOfDesignSheet === "firstSheet") {	
 					designSheet = "firstSheet";
 					activeCanvas.style.transformOrigin = 'top left';
 					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);					
+					paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);		
+					fillTextFunc(context);			
 				}
 			}
 			
@@ -1218,7 +1444,7 @@
 							
 			});
 			
-			console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+			// console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
 			
 			closePopupButton.addEventListener('click', () => {
 				overlay.style.display = 'none';
@@ -1304,10 +1530,12 @@
 				context.fillText(text, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;			
 			}
 			
+			/*
 			function fillTextFromLocalStorage(context) {
 			
 				const zoom = 1;
 				
+				console.log(`localStorage= ${JSON.stringify(localStorage, null, 2)}`);
 				const decimalNumber = localStorage.getItem('decimalNumber');
 				
 				// Fill the canvas
@@ -1319,15 +1547,41 @@
 				context.restore();
 				
 			}	
+			*/
 			
 			
 			const divisionBy2 = (number) => number / 2;
 			
 			
-			function fillText(context) {
-				
-				const zoom = 1;
 			
+			
+			// Function for clearing Local Storage
+			const clearLclStorage = document.querySelector('.clearLclStorage');
+			clearLclStorage.addEventListener('click', () => {
+				localStorage.clear();
+				
+				console.log(`Cleared localStorage= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
+				
+				const allInputsForClear = document.querySelectorAll('.form-group input');
+				allInputsForClear.forEach((inputForClear) => {
+					inputForClear.value = '';
+				});
+				
+				const inputsChanges = document.querySelectorAll('.inputsChanges input');
+				inputsChanges.forEach((inputChanges) => {
+					inputChanges.value = '';
+				});
+				
+				const textareaInput = document.querySelector('.customHeight');
+				textareaInput.value = '';
+			});
+			
+			// Функция вставки текста!!!
+			// Function for filling stamp and closing pop-up window
+			//const context = context;
+			const okBtn = document.querySelector('.ok-btn');
+			
+			okBtn.addEventListener('click', () => {
 				// Choose values from fields in pop-up window
 				const developer = document.querySelector('#developer').value;
 				const inspector = document.querySelector('#inspector').value;
@@ -1335,7 +1589,7 @@
 				const normControl = document.querySelector('#normControl').value;
 				const approving = document.querySelector('#approving').value;
 				const weight = document.querySelector('#weight').value;
-				const scale = document.querySelector('#scale').value;
+				const scaleText = document.querySelector('#scale').value;
 
 				const material = document.querySelector('#material').value;
 				
@@ -1377,7 +1631,7 @@
 					normControl,
 					approving,
 					weight,
-					scale,
+					scaleText,
 					material,
 					O,
 					O1,
@@ -1404,168 +1658,18 @@
 				
 				localStorage.setItem('entriesDevTable', JSON.stringify(entriesDevTable));
 
-				console.log(`localStorage.entriesDevTable= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
 
-				// Fill the canvas
-				context.save();
-				context.font = `${9 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				const decNumWidthText = context.measureText(decimalNumber).width;
-				context.fillText(decimalNumber, ((sheetWidth - 5) - 60 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
-				context.restore();
-				
-				context.save();
-				context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
-				context.rotate(Math.PI / 1);
-				context.font = `${9 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
-				context.fillText(decimalNumAbove, ((20 - 70 - 5) - (decimalNumAboveWidth / 2)) * zoom, (5) * zoom);  // x = 26; y = 257.9;				
-				context.restore();
-				
-				context.save();
-				context.font = `${9 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				const signCustomerWidth = context.measureText(signCustomer).width;
-				context.fillText(signCustomer, ((20 + 70 + 7.5) - (signCustomerWidth / 2)) * zoom, (5 + 7 + 3) * zoom);  // x = 26; y = 257.9;
-				context.restore();
-				
-				context.save();
-				context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
-				context.rotate(Math.PI / 1);
-				context.font = `${5.5 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				const litera1AboveWidth = context.measureText(litera1Above).width;
-				context.fillText(litera1Above, ((20 - 70 - 5 - 14 - 35 - 26.5 - (litera1AboveWidth / 2))) * zoom, (8) * zoom);  // x = 26; y = 257.9;
-				const litera2AboveWidth = context.measureText(litera2Above).width;
-				context.fillText(litera2Above, ((20 - 70 - 5 - 14 - 35 - 26.5) - (litera2AboveWidth / 2)) * zoom, (5 - 4) * zoom);  // x = 26; y = 257.9;
-				
-				context.restore();
-				
-				context.save();
-				context.font = `${3.5 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
+				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
+				const context = activeCanvas.getContext('2d');
 
-				context.fillText(O, ((sheetWidth - 5) - 50 + 2) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				context.fillText(O1, ((sheetWidth - 5) - 50 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				context.fillText(O2, ((sheetWidth - 5) - 50 + 5 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-			
-				const txtWidth = context.measureText(weight).width;
-				context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 9 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				
-				const txtScaleWidth = context.measureText(scale).width;
-				context.fillText(scale, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
-				context.restore();
-				
-				context.save();
-				context.translate(((20 - 7) - 1.5) * zoom, ((sheetHeight - 5) - 12) * zoom);  // x = 16.7; y = 280.3;
-				context.rotate(-Math.PI / 2);
-				// Fill table
-				const textSizeInv = 3.5 * zoom;		
-				context.fillStyle = "blue";
-				context.font = `${textSizeInv}px Arial Narrow`;
-				const invNumWidth = context.measureText(inventoryNum).width;
-				context.fillText(inventoryNum, (0 - (invNumWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 0; y = 0;
-				const vzamInvNumWidth = context.measureText(vzamInvNum).width;
-				context.fillText(vzamInvNum, (25 + 35 - (vzamInvNumWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 60; y = 0;
-				const invNumDublWidth = context.measureText(invNumDubl).width;
-				context.fillText(invNumDubl, (25 + 35 + 25 - (invNumDublWidth / 2)) * zoom, (0 + 6.5) * zoom);  // x = 85.2; y = 0;
-				const SpravNumWidth = context.measureText(SpravNum).width;
-				context.fillText(SpravNum, (287 - 60 - 60 - 8 + 25 - (SpravNumWidth / 2)) * zoom, 7 * zoom);  // x = 180.4; y = 0;
-				const firstApplicationWidth = context.measureText(firstApplication).width;
-				context.fillText(firstApplication, (287 - 60 - 8 + 25 - (firstApplicationWidth / 2)) * zoom, 7 * zoom);  // x = 234.7; y = 0;
-				context.restore();
-				
-				context.font = `${3.5 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				
-				context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 0.5) * zoom);  // x = 154; y = 267.8;
-				context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 0.5) * zoom);  // x = 174.5; y = 267.8;
-				
-				context.save();
-				// Zoom factor
-				// var zoom = 1;
-				const textSizeDev = 3.5 * zoom;		
-				context.font = `${textSizeDev}px Arial Narrow`;
-				context.fillStyle = "blue";
-				context.fillText(approving, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5 - 1)) * zoom);  // x = 26; y = 282.9;
-				context.fillText(normControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 277.9;
-				context.fillText(techControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 267.9;
-				context.fillText(inspector, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 262.9;
-				context.fillText(developer, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;
-				
-				const numberInputWidth = context.measureText(numberInput).width;
-				context.fillText(numberInput, ((sheetWidth - 5) - 185 + 4 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
-				
-				const changeSheetWidth = context.measureText(changeSheet).width;
-				context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 4 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+				context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
 
-				const numDocWidth = context.measureText(numDoc).width;	
-				context.fillText(numDoc, ((sheetWidth - 5) - 185 + 4 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
-				
-				const IdCustomerWidth = context.measureText(IdCustomer).width;
-				context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
-				
-				const textSizeMainTitle = 5 * zoom;	
-				context.font = `${textSizeMainTitle}px Arial Narrow`;
-				context.fillStyle = "blue";	
+				paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+				fillTextFunc(context);
 
-				const materialWidth = context.measureText(material).width;
-				context.fillText(material, ((sheetWidth - 5) - 50 - 70 + 35 - (materialWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
-				
-				const nameOrgWidth = context.measureText(nameOrg).width;
-				context.fillText(nameOrg, ((sheetWidth - 5) - 50 + 25 - (nameOrgWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
-				
-				// TextArea 'name' with \n
-				const nameLines = name.split('\n');
-				const lineHeight = 5;
-				
-				let textWidth = context.measureText(name).width;
-				let x = ((sheetWidth - 5) - 50 - 70 + 35) * zoom;
-				let y = ((sheetHeight - 5) - 15 - 12.5)  * zoom;
-				for (let i = 0; i < nameLines.length; i += 1) {
-					const line = nameLines[i];
-					textWidth = context.measureText(line).width;
-					x -= textWidth / 2;
-					context.fillText(line, x, y);
-					y += lineHeight;
-					x += textWidth / 2;
-				}
-				context.restore();
-			}
-			
-			// Function for clearing Local Storage
-			const clearLclStorage = document.querySelector('.clearLclStorage');
-			clearLclStorage.addEventListener('click', () => {
-				localStorage.clear();
-				
-				console.log(`Cleared localStorage= ${JSON.stringify(JSON.parse(localStorage.getItem('entriesDevTable')), null, 3)}`);
-				
-				const allInputsForClear = document.querySelectorAll('.form-group input');
-				allInputsForClear.forEach((inputForClear) => {
-					inputForClear.value = '';
-				});
-				
-				const inputsChanges = document.querySelectorAll('.inputsChanges input');
-				inputsChanges.forEach((inputChanges) => {
-					inputChanges.value = '';
-				});
-				
-				const textareaInput = document.querySelector('.customHeight');
-				textareaInput.value = '';
-			});
-			
-			// Function for filling stamp and closing pop-up window
-			//const context = context;
-			const okBtn = document.querySelector('.ok-btn');
-			okBtn.addEventListener('click', () => {
-				const scale = 3.74;
-				const context = ctx;
-				context.clearRect(0, 0, canvas.width, canvas.height);
-				paintCanvas(sheetWidth, sheetHeight, canvas, scale);
-				fillText(context); // fillText(context)
 				overlay.style.display = 'none';
 				popup.style.display = 'none';
+
 			});
 			
 			
@@ -1619,60 +1723,58 @@
 			}
 			
 			function drawAndFillTableInv(sheetWidth, sheetHeight, zoom, context) {
-				if (orientation === "landscape" && format === "A4") {
-					return;
-				} else {
-					context.beginPath();
-					context.lineCap = "square";
-					// set the line width to (1 pixel * zoom) = 3.78
-					// Подошло значение = 2.5
-					context.lineWidth = (0.7);
-					
-					// Zoom factor
-					//var zoom = 1;
-					// Horizontal lines
-					context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
-					context.lineTo(((20 - 7 - 5)) * zoom, (sheetHeight - (5)) * zoom);
-					
-					context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
-					context.lineTo(((20 - 7 - 5)) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
-					
-					context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25 + 35) * zoom));
-					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - ((5 + 25 + 35)) * zoom));
-					
-					context.moveTo((20) * zoom, (sheetHeight - ((5 + 25 + 35 + 25)) * zoom));
-					context.lineTo((20 - 7 - 5) * zoom, sheetHeight - (5 + 25 + 35 + 25) * zoom);
-					
-					context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
-					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
-					
-					context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
 				
-					// Table, which named "Inv. №"
-					// Vertical lines
-					context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-					context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5)) * zoom);
-					
-					context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
-					context.lineTo((20 - 7) * zoom, (sheetHeight - (5)) * zoom);
-					context.stroke();
+				context.beginPath();
+				context.lineCap = "square";
+				// set the line width to (1 pixel * zoom) = 3.78
+				// Подошло значение = 2.5
+				context.lineWidth = (0.7);
+				
+				// Zoom factor
+				//var zoom = 1;
+				// Horizontal lines
+				context.moveTo((20) * zoom, (sheetHeight - (5)) * zoom);
+				context.lineTo(((20 - 7 - 5)) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+				context.lineTo(((20 - 7 - 5)) * zoom, ((sheetHeight - (5)) - (25)) * zoom);
+				
+				context.moveTo((20) * zoom, ((sheetHeight - (5)) - (25 + 35) * zoom));
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - ((5 + 25 + 35)) * zoom));
+				
+				context.moveTo((20) * zoom, (sheetHeight - ((5 + 25 + 35 + 25)) * zoom));
+				context.lineTo((20 - 7 - 5) * zoom, sheetHeight - (5 + 25 + 35 + 25) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25)) * zoom);
+				
+				context.moveTo((20) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+			
+				// Table, which named "Inv. №"
+				// Vertical lines
+				context.moveTo((20 - 7 - 5) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7 - 5) * zoom, (sheetHeight - (5)) * zoom);
+				
+				context.moveTo((20 - 7) * zoom, (sheetHeight - (5 + 25 + 35 + 25 + 25 + 35)) * zoom);
+				context.lineTo((20 - 7) * zoom, (sheetHeight - (5)) * zoom);
+				context.stroke();
 
-					context.save();
-					context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
-					context.rotate(-Math.PI / 2);
-					// Fill table
-					const textSizeInv = (3.5) * zoom;		
-					context.fillStyle = "black";
-					context.font = `${textSizeInv}px Arial Narrow`;
-					context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
-					context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
-					context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
-					context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
-					context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
-					
-					context.restore();
-				}
+				context.save();
+				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+				context.rotate(-Math.PI / 2);
+				// Fill table
+				const textSizeInv = (3.5) * zoom;		
+				context.fillStyle = "black";
+				context.font = `${textSizeInv}px Arial Narrow`;
+				context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
+				context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
+				context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
+				context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
+				context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
+				
+				context.restore();
+
 			}
 			
 			function drawAndFillTableSpravN(sheetWidth, sheetHeight, zoom, context) {
@@ -1721,12 +1823,8 @@
 
 			// Тут какая-то дичь
 			function drawAndFillTableAbove(sheetWidth, sheetHeight, zoom, orientation, context) {
-				// Table above
-				// if (orientation === "landscape" && format === "A4") {
-				if (orientation === "landscape") {
-					//return;
-				//} else {				
-				//if (orientation === "landscape" || format === "A4") {
+				// Table above		
+				if (orientation === "landscape" || format === "A4") {
 					context.beginPath();
 					context.lineCap = "square";
 					// set the line width to (1 pixel * zoom) = 3.78
@@ -1748,6 +1846,7 @@
 					context.lineTo((20 + 70 + 14 + 53) * zoom, (5 + 7) * zoom);
 					context.stroke();
 				} else {
+				
 					context.beginPath();
 					context.lineCap = "square";
 					// set the line width to (1 pixel * zoom) = 3.78
@@ -1954,7 +2053,7 @@
 					context.fillText("Масса", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 4.5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 171.5; y = 247.9;
 					context.fillText("Масштаб", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17 - 3)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 187.3; y = 247.9;
 					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
-					context.fillText(`${sheetNumber}`, (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2 - 8)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
+					// context.fillText(`${sheetNumber}`, (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2 - 8)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
 					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 174.5; y = 267.8;
 					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 133.3; y = 287.7;
 					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 173.1; y = 287.7;
@@ -1995,8 +2094,7 @@
 			
 				const context = canvas.getContext('2d');
 				
-				// Очищаем canvas от предыдущего содержимого;
-				context.clearRect(0, 0, canvas.width, canvas.height);
+				
 				
 				// Сохраняет текущее состояние контекста ( стили, трансформации ) в стек.
 				// Это нужно, чтобы потом вернуть все как было;
@@ -2010,6 +2108,8 @@
 				
 				// Включает режим отсечения. Теперь все, что выходит за границы этого прямоугольника - не будет рисоваться;
 				//context.clip();
+				// Очищаем canvas от предыдущего содержимого;
+				context.clearRect(0, 0, canvas.width, canvas.height);
 				
 				context.translate(offsetX, offsetY); // <-- Применяет новое смещение;
 				
@@ -2196,10 +2296,15 @@
 				// mouseX - пересчитывает смещение так, чтобы выбранная точка оставалась под курсором;
 				
 				scale = newScale;
-				console.log('scale', scale);
+				//console.log('scale', scale);
 				// scales = Math.min(Math.max(0.1, scale), 10);
 				paintCanvas(sheetWidth, sheetHeight, currentCanvas, scale, offsetX, offsetY);
-			//}
+				
+				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
+				const context = activeCanvas.getContext('2d');
+
+				fillTextFunc(context);
+				//}
 			
 			
 		}, 1); // <-- Выполнение функции происходит не на каждый скролл, а каждые 10 миллисекунд; Это значение можно уменьшить;
