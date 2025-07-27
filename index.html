@@ -446,7 +446,7 @@
 					<option value="A2">A2</option>
 					<option value="A1">A1</option>
 				</select>
-				<button class="printButton">Печать</button>
+				<!-- <button class="printButton">Печать</button> -->
 				<span id="descriptionText"></span>
 				<button id="openPopup" class="bigButtons">Заполнить штамп</button>
 				<!--
@@ -459,8 +459,8 @@
 						<span class="close-btn">&times;</span>
 					</div>
 					<div class="tabs">
-						<button id="btnTab1" class="tab-btn">Tab 1</button>
-						<button id="btnTab2" class="tab-btn">Tab 2</button>
+						<!-- <button id="btnTab1" class="tab-btn">Tab 1</button> -->
+						<!-- <button id="btnTab2" class="tab-btn">Tab 2</button> -->
 					</div>
 					<div class="overflowBlock" data-div="Tab1">
 						<div id="Tab1" class="form-content" data-target="Tab1">
@@ -613,6 +613,7 @@
 					
 					</div>
 					
+					<!--
 					<div class="overflowBlock" data-div="Tab2">
 						<div id="Tab2" class="form-content" data-target="Tab2">
 							<div class="innerInputs2">
@@ -654,6 +655,8 @@
 							
 						</div>
 					</div>
+					-->
+
 					<button class="clearLclStorage">Очистить историю</button>
 					<div class="popup-footer">
 						<button class="ok-btn">Ok</button>
@@ -748,54 +751,6 @@
 						break;
 				}
 			}
-			
-			// Get the 'select' element
-			const paperFormat = document.getElementById('paper-format');
-			
-			// Processing event change select
-			paperFormat.addEventListener('change', function() {
-
-				const radioButtons = document.querySelectorAll('input[name="orientation"]');
-				radioButtons.forEach((radio) => {
-					radio.checked = false;
-				});
-
-				const radioButtonsDesignSheet = document.querySelectorAll('input[name="design"]');
-				radioButtonsDesignSheet.forEach((radio) => {
-					radio.checked = false;
-				});
-
-				const activeCanvas = document.querySelector('#canvas1');
-				const context = activeCanvas.getContext('2d');
-				
-				// Сброс всех трансформаций
-				activeCanvas.style.transform = 'none';
-				activeCanvas.style.left = '0';
-				activeCanvas.style.top = '0';
-				context.setTransform(1, 0, 0, 1, 0, 0);
-				
-				//const scale = 3;
-				const selectedFormat = this.value;
-				
-				// Проверка выбранного формата
-				if(!selectedFormat) return;
-				
-				try {
-					selectFormat(selectedFormat);
-					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-					
-					console.log(`orientation= ${orientation}`);
-
-					// Проверка размеров перед отрисовкой
-					if(sheetWidth > 0 && sheetHeight > 0) {
-						paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
-					} else {
-						console.error('Некорректные размеры:', sheetWidth, sheetHeight);
-					}
-				} catch (error) {
-					console.error('Ошибка при изменении формата:', error);
-				}
-			});
 
 			function fillTextFunc(context) {
 				
@@ -905,115 +860,219 @@
 					}
 				}
 
-				// Fill the canvas
-				context.save();
-				context.font = `${9 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				const decNumWidthText = context.measureText(decimalNumber).width;
-				context.fillText(decimalNumber, ((sheetWidth - 5) - 60 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
-				context.restore();
-		
-				// // //
-				variationInsertTop();
-
-				context.save();
-				context.font = `${3.5 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-
-				context.fillText(O, ((sheetWidth - 5) - 50 + 2) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				context.fillText(O1, ((sheetWidth - 5) - 50 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				context.fillText(O2, ((sheetWidth - 5) - 50 + 5 + 5 + 1) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-			
-				const txtWidth = context.measureText(weight).width;
-				context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 9 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6) * zoom);  // x = 26; y = 282.9;
-				
-				const txtScaleWidth = context.measureText(scaleText).width;
-				context.fillText(scaleText, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
-				context.restore();
-				
-				context.save();
-				context.translate((17.5) * zoom, ((sheetHeight - 5) * zoom));  // x = 16.7; y = 280.3;
-				context.rotate(-Math.PI / 2);
-				// Fill table
-				const textSizeInv = 3.5 * zoom;		
-				context.fillStyle = "blue";
-				context.font = `${textSizeInv}px Arial Narrow`;
-
-				const invNumWidth = context.measureText(inventoryNum).width;
-				context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
-				const vzamInvNumWidth = context.measureText(vzamInvNum).width;
-				context.fillText(vzamInvNum, (12.5 + 35 + 25 - (vzamInvNumWidth / 2)), (0));  // x = 60; y = 0;
-				const invNumDublWidth = context.measureText(invNumDubl).width;
-				context.fillText(invNumDubl, (12.5 + 35 + 25 + 25 - (invNumDublWidth / 2)), 0);  // x = 85.2; y = 0;
-				
-				if ((orientation === "landscape" && format !== "A4" && designSheet === "firstSheet") || (orientation === "portrait" && designSheet === "firstSheet")) {
-					const SpravNumWidth = context.measureText(SpravNum).width;
-					context.fillText(SpravNum, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 - (SpravNumWidth / 2)), 0);  // x = 180.4; y = 0;		
-					const firstApplicationWidth = context.measureText(firstApplication).width;
-					context.fillText(firstApplication, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 + 60 - (firstApplicationWidth / 2)), 0);  // x = 234.7; y = 0;
-				}
-
-				context.restore();
-				
-				context.font = `${3.5 * zoom}px Arial Narrow`;
-				context.fillStyle = "blue";
-				
-				context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 154; y = 267.8;
-				context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 174.5; y = 267.8;
-				
-				context.save();
-				// Zoom factor
-				const textSizeDev = 3.5 * zoom;		
-				context.font = `${textSizeDev}px Arial Narrow`;
-				context.fillStyle = "blue";
-				
 				if (designSheet === "firstSheet") {
+					// Fill the canvas
+					context.save();
+					context.font = `${9 * zoom}px Arial Narrow`;
+					context.fillStyle = "blue";
+					const decNumWidthText = context.measureText(decimalNumber).width;
+					context.fillText(decimalNumber, ((sheetWidth - 5) - 10 - 50 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
+					context.restore();
+			
+					variationInsertTop();
+
+					context.save();
+					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.fillStyle = "blue";
+
+					context.fillText(O, ((sheetWidth - 5) - 50 + 1.5) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+					context.fillText(O1, ((sheetWidth - 5) - 50 + 5 + 0.7) * zoom, ((sheetHeight - 5) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+					context.fillText(O2, ((sheetWidth - 5) - 50 + 5 + 5 + 0.5) * zoom, ((sheetHeight - 5) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+				
+					const txtWidth = context.measureText(weight).width;
+					context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 8.5 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+					
+					// сделай мастаб из input'а
+					const txtScaleWidth = context.measureText(scaleText).width;
+					context.fillText(scaleText, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
+					context.restore();
+					
+					context.save();
+					context.translate((17.5) * zoom, ((sheetHeight - 5) * zoom));  // x = 16.7; y = 280.3;
+					context.rotate(-Math.PI / 2);
+					// Fill table
+					const textSizeInv = 3.5 * zoom;		
+					context.fillStyle = "blue";
+					context.font = `${textSizeInv}px Arial Narrow`;
+
+					const invNumWidth = context.measureText(inventoryNum).width;
+					context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
+					const vzamInvNumWidth = context.measureText(vzamInvNum).width;
+					context.fillText(vzamInvNum, (12.5 + 35 + 25 - (vzamInvNumWidth / 2)), (0));  // x = 60; y = 0;
+					const invNumDublWidth = context.measureText(invNumDubl).width;
+					context.fillText(invNumDubl, (12.5 + 35 + 25 + 25 - (invNumDublWidth / 2)), 0);  // x = 85.2; y = 0;
+					
+					if ((orientation === "landscape" && format !== "A4" && designSheet === "firstSheet") || (orientation === "portrait" && designSheet === "firstSheet")) {
+						const SpravNumWidth = context.measureText(SpravNum).width;
+						context.fillText(SpravNum, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 - (SpravNumWidth / 2)), 0);  // x = 180.4; y = 0;		
+						const firstApplicationWidth = context.measureText(firstApplication).width;
+						context.fillText(firstApplication, (12.5 + 35 + 25 + 25 + 35 + 22 + 42.5 + 60 - (firstApplicationWidth / 2)), 0);  // x = 234.7; y = 0;
+					}
+					context.restore();
+
+
+					context.save();
+					const textSizeDev = 3.5 * zoom;		
+					context.fillStyle = "blue";
+					context.font = `${textSizeDev}px Arial Narrow`;
+
 					context.fillText(developer, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;
 					context.fillText(approving, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5 - 1)) * zoom);  // x = 26; y = 282.9;
 					context.fillText(normControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 277.9;
 					context.fillText(techControl, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 267.9;
 					context.fillText(inspector, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 262.9;
-				}
 				
-				const numberInputWidth = context.measureText(numberInput).width;
-				context.fillText(numberInput, ((sheetWidth - 5) - 185 + 4 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
-				
-				const changeSheetWidth = context.measureText(changeSheet).width;
-				context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 4 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
+					const numberInputWidth = context.measureText(numberInput).width;
+					context.fillText(numberInput, ((sheetWidth - 5) - 185 + 3.5 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1.2) * zoom);  // x = 26; y = 257.9;
+					
+					const changeSheetWidth = context.measureText(changeSheet).width;
+					context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 3.5 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1.2) * zoom);  // x = 26; y = 257.9;
 
-				const numDocWidth = context.measureText(numDoc).width;	
-				context.fillText(numDoc, ((sheetWidth - 5) - 185 + 4 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1) * zoom);  // x = 26; y = 257.9;
-				
-				const IdCustomerWidth = context.measureText(IdCustomer).width;
-				context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
-				
-				const textSizeMainTitle = 5 * zoom;	
-				context.font = `${textSizeMainTitle}px Arial Narrow`;
-				context.fillStyle = "blue";	
+					const numDocWidth = context.measureText(numDoc).width;	
+					context.fillText(numDoc, ((sheetWidth - 5) - 185 + 3.5 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 10 - 1.2) * zoom);  // x = 26; y = 257.9;
 
-				const materialWidth = context.measureText(material).width;
-				context.fillText(material, ((sheetWidth - 5) - 50 - 70 + 35 - (materialWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+					context.restore();
+					
+					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.fillStyle = "blue";
+					
+					context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 154; y = 267.8;
+					context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 174.5; y = 267.8;
+					
+					context.save();
+
+					const IdCustomerWidth = context.measureText(IdCustomer).width;
+					context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
+					
+					const textSizeMainTitle = 5 * zoom;	
+					context.font = `${textSizeMainTitle}px Arial Narrow`;
+					context.fillStyle = "blue";	
+
+					const materialWidth = context.measureText(material).width;
+					context.fillText(material, ((sheetWidth - 5) - 50 - 70 + 35 - (materialWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+					
+					const nameOrgWidth = context.measureText(nameOrg).width;
+					context.fillText(nameOrg, ((sheetWidth - 5) - 50 + 25 - (nameOrgWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
+					
+					// TextArea 'name' with \n
+					const nameLines = name.split('\n');
+					const lineHeight = 5;
+					
+					let textWidth = context.measureText(name).width;
+					let x = ((sheetWidth - 5) - 50 - 70 + 35) * zoom;
+					let y = ((sheetHeight - 5) - 15 - 12.5)  * zoom;
+					for (let i = 0; i < nameLines.length; i += 1) {
+						const line = nameLines[i];
+						textWidth = context.measureText(line).width;
+						x -= textWidth / 2;
+						context.fillText(line, x, y);
+						y += lineHeight;
+						x += textWidth / 2;
+					}
+					context.restore();
+				} else {
+					// Fill the canvas
+
+					variationInsertTop();
+
+					context.save();
+					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.fillStyle = "blue";		
+					const sheetTxtWidth = context.measureText(sheet).width;	
+					context.fillText(sheet, ((sheetWidth - 5) - 5 - (sheetTxtWidth / 2)) * zoom, ((sheetHeight - 5) - 2.8) * zoom);
+					context.restore();
+
+
+					context.save();
+					context.font = `${9 * zoom}px Arial Narrow`;
+					context.fillStyle = "blue";
+
+					const decNumWidthText = context.measureText(decimalNumber).width;
+					context.fillText(decimalNumber, ((sheetWidth - 5) - 10 - 50 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 4) * zoom);  // x = 26; y = 257.9;
+					context.restore();
+					
+					// Zoom factor
+					const textSizeDev = 3.5 * zoom;		
+					context.font = `${textSizeDev}px Arial Narrow`;
+					context.fillStyle = "blue";
+					const numberInputWidth = context.measureText(numberInput).width;
+					context.fillText(numberInput, ((sheetWidth - 5) - 185 + 3.5 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 257.9;
+					
+					const changeSheetWidth = context.measureText(changeSheet).width;
+					context.fillText(changeSheet, ((sheetWidth - 5) - 185 + 3.5 + 8.5 - (changeSheetWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 257.9;
+
+					const numDocWidth = context.measureText(numDoc).width;	
+					context.fillText(numDoc, ((sheetWidth - 5) - 185 + 3.5 + 8.5 + 16.5 - (numDocWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 257.9;
 				
-				const nameOrgWidth = context.measureText(nameOrg).width;
-				context.fillText(nameOrg, ((sheetWidth - 5) - 50 + 25 - (nameOrgWidth / 2)) * zoom, ((sheetHeight - 5) - 6)  * zoom);
-				
-				// TextArea 'name' with \n
-				const nameLines = name.split('\n');
-				const lineHeight = 5;
-				
-				let textWidth = context.measureText(name).width;
-				let x = ((sheetWidth - 5) - 50 - 70 + 35) * zoom;
-				let y = ((sheetHeight - 5) - 15 - 12.5)  * zoom;
-				for (let i = 0; i < nameLines.length; i += 1) {
-					const line = nameLines[i];
-					textWidth = context.measureText(line).width;
-					x -= textWidth / 2;
-					context.fillText(line, x, y);
-					y += lineHeight;
-					x += textWidth / 2;
+					context.save();
+
+					context.translate((17.5) * zoom, ((sheetHeight - 5) * zoom));  // x = 16.7; y = 280.3;
+					context.rotate(-Math.PI / 2);
+					// Fill table
+					const textSizeInv = 3.5 * zoom;		
+					context.fillStyle = "blue";
+					context.font = `${textSizeInv}px Arial Narrow`;
+
+					const invNumWidth = context.measureText(inventoryNum).width;
+					context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
+					const vzamInvNumWidth = context.measureText(vzamInvNum).width;
+					context.fillText(vzamInvNum, (12.5 + 35 + 25 - (vzamInvNumWidth / 2)), (0));  // x = 60; y = 0;
+					const invNumDublWidth = context.measureText(invNumDubl).width;
+					context.fillText(invNumDubl, (12.5 + 35 + 25 + 25 - (invNumDublWidth / 2)), 0);  // x = 85.2; y = 0;
+					
+					context.restore();
 				}
-				context.restore();
 			}
+			
+			// Get the 'select' element
+			const paperFormat = document.getElementById('paper-format');
+			
+			// Processing event change select
+			paperFormat.addEventListener('change', function() {
+
+				const radioButtons = document.querySelectorAll('input[name="orientation"]');
+				radioButtons.forEach((radio) => {
+					radio.checked = false;
+				});
+
+				const radioButtonsDesignSheet = document.querySelectorAll('input[name="design"]');
+				radioButtonsDesignSheet.forEach((radio) => {
+					radio.checked = false;
+				});
+
+				const activeCanvas = document.querySelector('#canvas1');
+				const context = activeCanvas.getContext('2d');
+				
+				// Сброс всех трансформаций
+				activeCanvas.style.transform = 'none';
+				activeCanvas.style.left = '0';
+				activeCanvas.style.top = '0';
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				
+				//const scale = 3;
+				const selectedFormat = this.value;
+				
+				// Проверка выбранного формата
+				if(!selectedFormat) return;
+				
+				try {
+					selectFormat(selectedFormat);
+					context.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+					
+					console.log(`orientation= ${orientation}`);
+
+					// Проверка размеров перед отрисовкой
+					if(sheetWidth > 0 && sheetHeight > 0) {
+						paintCanvas(sheetWidth, sheetHeight, activeCanvas, scale);
+						fillTextFunc(context);
+					} else {
+						console.error('Некорректные размеры:', sheetWidth, sheetHeight);
+					}
+				} catch (error) {
+					console.error('Ошибка при изменении формата:', error);
+				}
+			});
+
 						
 			function initialCanvas() {
 				const activeCanvas = document.querySelector('#canvas1'); // Scale should be scale(0.19)
@@ -1098,7 +1157,7 @@
 
 						//context.clearRect(0, 0, canvas.width, canvas.height);
 						//paintCanvas(sheetWidth, sheetHeight, canvas, scale);
-						fillText(context); // fillText(context)
+						fillTextFunc(context); // fillText(context)
 					}
 				}
 			});
@@ -1138,11 +1197,64 @@
 				} 
 			});			
 			
+			/*
+			function printCanvas(canvasId) {
+				const canvas = document.getElementById(canvasId);
+				if (!canvas) return;
+
+				const printWindow = window.open('', '_blank');
+				const img = new Image();
+				img.src = canvas.toDataURL('image/png');
+
+				img.onload = () => {
+					const html = `
+					<!DOCTYPE html>
+					<html>
+						<head>
+						<title>Print</title>
+						<style>
+							@page { size: auto; margin: 0; }
+							body { margin: 0; }
+							img { 
+								width: 100%;
+								height: auto;
+								object-fit: contain;
+								display: block;
+							}
+						</style>
+						</head>
+						<body>
+						<img src="${img.src}">
+						</body>
+					</html>
+					`;
+					
+					printWindow.document.write(html);
+					printWindow.document.close();
+					setTimeout(() => {
+					printWindow.print();
+					printWindow.close();
+					}, 500);
+  				};
+			}
+			*/
 			
-			// Function for printing
+			/*
+			document.querySelector('.printButton').addEventListener('click', () => {
+				const activeCanvasID = 'canvas1';
+				//const canvas = document.getElementById(activeCanvasID);
+
+				// const hiResCanvas = prepareHiResCanvas(canvas);
+
+				printCanvas(activeCanvasID);
+			});
+			*/			
+
+			
+			// Function for printing ( OLD )
+			/*
 			const printButton = document.querySelector('.printButton');
 			printButton.addEventListener('click', function() {
-		
 				const activeCanvas = document.querySelector('#canvas1');
 				const activeCanvasContext = activeCanvas.getContext('2d');
 				
@@ -1152,8 +1264,16 @@
 				canvasContainer.style.transform = 'scale(1)';
 				
 				
-				const actualWidth = Math.ceil(activeCanvas.width * 0.06684491978609625); // width in mm
-				const actualHeight = Math.ceil(activeCanvas.height * 0.06684491978609625); // height in mm
+				//const actualWidth = Math.ceil(activeCanvas.width * 0.06684491978609625); // width in mm
+				//const actualHeight = Math.ceil(activeCanvas.height * 0.06684491978609625); // height in mm
+				
+				const pxToMm = 0.264583; // 1px = 0.264583 мм
+				const actualWidth = Math.ceil(activeCanvas.width * pxToMm);
+				const actualHeight = Math.ceil(activeCanvas.height * pxToMm);
+
+				console.log(`format= ${format}`);
+				console.log(`orientation= ${orientation}`);
+
 				const activeCanvasDataURL = activeCanvas.toDataURL('image/png');
 				const img = document.createElement('img');
 				img.id = "canvasImage";				
@@ -1170,33 +1290,37 @@
 				
 				const styleElForPage = document.querySelector('#styleForPage'); // ${actualWidth}mm ${actualHeight}mm 
 				styleElForPage.textContent = '';
-				styleElForPage.textContent = `@page { size: ${format} ${orientation}; margin: 0; }
-				@media print { 
-					body * { 
-						margin: 0;
-						padding: 0;
-					} 
-					.header * { display: none; } 
-					#canvas1 { display: none; } 
-					.menu * { display: none; } 
-					#canvasImage { 
-						margin: 0 auto; 
-						padding: 0; 
-						display: block; 
-						width: ${actualWidth}mm;
-						height: ${actualHeight}mm;
-					} 
-				}
+				styleElForPage.textContent = `
+					@page { 
+						size: ${format} ${orientation}; 
+						margin: 0; 
+					}
+					@media print {
+						.header, .menu, #canvas1, .no-print {
+							display: none !important;
+						}
+						body * { 
+							margin: 0 !important;
+							padding: 0 !important;
+						} 
+						#canvasImage {
+							max-width: 100% !important;
+							height: auto !important;
+							object-fit: contain !important;
+						} 
+					}
 				`;				
 				
 				img.onload = function() {
-					window.print();
-					
-					initialCanvas();
+					setTimeout(() => {
+						window.print();		
+						initialCanvas(); // Возврат исходного состояния
+					}, 100);
 				};
 				
 				
 			});
+			*/
 
 			/*
 			// Handler for addind new sheet to document
@@ -2090,12 +2214,9 @@
 				}
 			}
 			
-			function paintCanvas(sheetWidth, sheetHeight, canvas, scale, offsetX = 0, offsetY = 0) {
-			
+			function paintCanvas(sheetWidth, sheetHeight, canvas, scale, offsetX = 0, offsetY = 0) {		
 				const context = canvas.getContext('2d');
-				
-				
-				
+
 				// Сохраняет текущее состояние контекста ( стили, трансформации ) в стек.
 				// Это нужно, чтобы потом вернуть все как было;
 				context.save();
@@ -2126,7 +2247,8 @@
 				// console.log(canvas.width, canvas.height);
 				
 				context.imageSmoothingEnabled = false; // <-- Отключение сглаживания для пиксельной графики
-				
+				context.textRendering = "geometricPrecision"; // Четкий текст
+
 				// Normalize coordinate system to use css pixels
 				context.fillStyle = "black";	
 				if (designSheet === 'firstSheet') {
