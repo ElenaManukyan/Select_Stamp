@@ -2287,6 +2287,71 @@
 			const container = document.querySelector('#canvasContainer');
 			const currentCanvas = document.querySelector('#canvas1');
 
+			// Установка стилей
+			container.style.position = 'relative';
+			container.style.overflow = 'hidden';
+			currentCanvas.style.position = 'absolute';
+
+			let isDragging = false;
+			let startX, startY, canvasStartX, canvasStartY;
+
+			// Общие функции для мыши и тач-событий
+			const startDrag = (clientX, clientY) => {
+				isDragging = true;
+				startX = clientX;
+				startY = clientY;
+				canvasStartX = parseInt(currentCanvas.style.left) || 0;
+				canvasStartY = parseInt(currentCanvas.style.top) || 0;
+				currentCanvas.style.cursor = 'grabbing';
+			};
+
+			const drag = (clientX, clientY) => {
+				if (!isDragging) return;
+				const dx = clientX - startX;
+				const dy = clientY - startY;
+				currentCanvas.style.left = `${canvasStartX + dx}px`;
+				currentCanvas.style.top = `${canvasStartY + dy}px`;
+			};
+
+			const stopDrag = () => {
+				isDragging = false;
+				currentCanvas.style.cursor = 'grab';
+			};
+
+			// События для мыши
+			container.addEventListener('mousedown', (e) => {
+				e.preventDefault(); // Предотвращаем выделение текста
+				startDrag(e.clientX, e.clientY);
+			});
+
+			container.addEventListener('mousemove', (e) => {
+				e.preventDefault();
+				drag(e.clientX, e.clientY);
+			});
+
+			container.addEventListener('mouseup', stopDrag);
+			container.addEventListener('mouseleave', stopDrag);
+
+			// События для тач-устройств
+			container.addEventListener('touchstart', (e) => {
+				e.preventDefault(); // Предотвращаем скролл страницы
+				const touch = e.touches[0];
+				startDrag(touch.clientX, touch.clientY);
+			}, { passive: false }); // Отключаем оптимизацию для preventDefault
+
+			container.addEventListener('touchmove', (e) => {
+				e.preventDefault();
+				const touch = e.touches[0];
+				drag(touch.clientX, touch.clientY);
+			}, { passive: false });
+
+			container.addEventListener('touchend', stopDrag);
+
+
+			/*
+			const container = document.querySelector('#canvasContainer');
+			const currentCanvas = document.querySelector('#canvas1');
+
 			// Установка необходимых стилей
 			container.style.position = 'relative';
 			container.style.overflow = 'hidden'; // Скрыть всё за пределами контейнера
@@ -2325,6 +2390,8 @@
 				currentCanvas.style.left = `${canvasStartX + dx}px`;
 				currentCanvas.style.top = `${canvasStartY + dy}px`;
 			});
+
+			*/
 			
 			
 		// Throttle - это как "тормоз" для другой функции,
