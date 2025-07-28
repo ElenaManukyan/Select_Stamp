@@ -6,11 +6,46 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<style id="styleForPage"></style>
 	<style>
+
+		/* Сброс стилей и базовая адаптация */
+		* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		}
+
+		body {
+		    margin: 0;
+    		padding: 0;
+			height: 100vh;
+			display: flex;
+  			flex-direction: column;
+		}
+
+		#canvasContainer {
+			flex: 0 0 50%; /* Растягивается на всё доступное пространство */
+			position: relative;
+			overflow: hidden;
+			border: 1px solid #ddd;
+			min-height: 200px; /* Минимальная высота */
+			overflow: auto;
+		}
+
 		
 		@media screen {
 			#printContainer {
 				display: none;
 			}
+		}
+
+		/* Адаптация под мобильные устройства */
+		@media (max-width: 768px) {
+		body {
+			padding: 5px;
+		}
+		fieldset {
+			padding: 10px;
+		}
 		}
 		
 
@@ -36,22 +71,21 @@
 			padding: 0;
 			/* overflow: hidden; */
 		}
-		
-		body {
-		    margin: 0;
-    padding: 0;
-    /* height: 100vh; */
-    /* width: 100vw; */
-    /* overflow: auto; */
-		}
-		
-		/*
-		body {
-		    margin: 0;
+
+		canvas {
+			margin: 0;
 			padding: 0;
-			
+			display: block;
+			cursor: grab; /* Set the cursor in the form of a hand */
 		}
-		*/
+
+		fieldset {
+			margin-top: 10px;
+			padding: 15px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background: #fff;
+		}
 		
 		.canvasAndMenu {
 		    display: flex;
@@ -59,28 +93,6 @@
 			/* overflow: auto; */
 			/* height: 100vh; */
 			/* width: 100vw; */
-		}
-		
-		#canvasContainer {
-		    border: 1px solid black;
-			overflow: auto;
-		}
-		
-		
-		canvas {
-			margin: 0;
-			padding: 0;
-			
-			/*border: 5px solid red;*/
-			
-			display: flex;
-			
-			cursor: grab; /* Set the cursor in the form of a hand */
-		}
-		
-		/* Change the cursor when actively dragging */
-		canvas:active {
-			cursor: grabbing;
 		}
 		
 		.menu {
