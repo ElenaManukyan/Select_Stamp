@@ -7,28 +7,42 @@
 	<style id="styleForPage"></style>
 	<style>
 
-		/* Сброс стилей и базовая адаптация */
-		* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
+		/* Базовые стили (для всех устройств) */
+		.app {
+			width: 90%; /* или фиксированная ширина, например 800px */
+			max-width: 1200px; /* ограничиваем максимальную ширину */
+			min-width: 300px; /* минимальная ширина для мобилок */
+			
+			/* Центрирование */
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			
+			/* Стили контейнера */
+			border: 1px solid #ddd;
+			box-shadow: 0 0 20px rgba(0,0,0,0.1);
+			background: white;
+			border-radius: 8px;
+			overflow: hidden;
+
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+
 		}
 
-		body {
-		    margin: 0;
-    		padding: 0;
-			height: 100vh;
-			display: flex;
-  			flex-direction: column;
+		.controls {
+			padding: 15px;
+			border: 1px solid #ccc;
+			background: white;
+			margin-bottom: 10px;
 		}
 
 		#canvasContainer {
-			flex: 0 0 50%; /* Растягивается на всё доступное пространство */
-			position: relative;
-			overflow: hidden;
-			border: 1px solid #ddd;
-			min-height: 200px; /* Минимальная высота */
+			flex: 1;
 			overflow: auto;
+			border: 1px solid #ddd;
 		}
 
 		
@@ -38,14 +52,28 @@
 			}
 		}
 
-		/* Адаптация под мобильные устройства */
+		/* Адаптация под мобилки (≤ 768px) */
 		@media (max-width: 768px) {
-		body {
-			padding: 5px;
-		}
-		fieldset {
-			padding: 10px;
-		}
+			.app {
+				flex-direction: column;
+				padding: 0;
+			}
+
+			.controls {
+				position: sticky; /* Фиксируем вверху при скролле */
+				top: 0;
+				z-index: 100; /* Чтобы был поверх других элементов */
+				width: 100%;
+				margin-bottom: 0;
+				border-radius: 0;
+				border-left: none;
+				border-right: none;
+				box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Тень для красоты */
+			}
+
+			#canvasContainer {
+				height: calc(100vh - 60px); /* Вычитаем высоту fieldset */
+			}
 		}
 		
 
@@ -79,28 +107,6 @@
 			cursor: grab; /* Set the cursor in the form of a hand */
 		}
 
-		fieldset {
-			margin-top: 10px;
-			padding: 15px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			background: #fff;
-		}
-		
-		.canvasAndMenu {
-		    display: flex;
-			justify-content: flex-end;
-			/* overflow: auto; */
-			/* height: 100vh; */
-			/* width: 100vw; */
-		}
-		
-		.menu {
-			width: 300px;
-			display: flex;
-			
-			height: 500px;
-		}
 		
 		#paper-format {
 			margin: 5px;
@@ -395,7 +401,7 @@
 		}
 	</style>
   </head>
-  <body>
+  <body class="canvasAndMenu app">
 	<div class="header">
 		
 		<!--
@@ -419,14 +425,12 @@
 			</div>
 		-->
 	</div>
-	<div class="canvasAndMenu">
-		<div id="canvasContainer">
-			<canvas id="canvas1"></canvas>
-		</div>
+	<div>
+		
 		<div id="printContainer"></div>
 		<!-- <img id="canvasImage" alt="Canvas Image"> -->
-		<div class="menu"> <!-- Maybe delete <aside> ? -->
-			<fieldset>
+		<div> <!-- Maybe delete <aside> ? -->
+			<fieldset class="controls">
 				<legend>Параметры листа</legend>
 				<fieldset>
 					<legend>Ориентация листа</legend>
@@ -676,8 +680,13 @@
 					</div>
 				</div>
 			</fieldset>
+			
+		</div>
+		<div id="canvasContainer">
+			<canvas id="canvas1"></canvas>
 		</div>
 	</div>
+	
 	<script>
 		window.onload = function() {
 			const canvas = document.getElementById('canvas1');
