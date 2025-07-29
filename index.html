@@ -42,7 +42,6 @@
 		#canvasContainer {
 			flex: 1;
 			overflow: auto;
-			border: 1px solid #ddd;
 		}
 
 		
@@ -63,7 +62,7 @@
 				position: sticky; /* Фиксируем вверху при скролле */
 				top: 0;
 				z-index: 100; /* Чтобы был поверх других элементов */
-				width: 100%;
+				width: 100wv;
 				margin-bottom: 0;
 				border-radius: 0;
 				border-left: none;
@@ -100,18 +99,21 @@
 			/* overflow: hidden; */
 		}
 
+		/*
 		canvas {
 			margin: 0;
 			padding: 0;
 			display: block;
-			cursor: grab; /* Set the cursor in the form of a hand */
-		}
+			cursor: grab;  Set the cursor in the form of a hand 
+		} */
 
 		
 		#paper-format {
-			margin: 5px;
+			margin-bottom: 10px;
 			padding: 10px 20px;
 			font-size: 16px;
+			height: 40px;
+			border-top: 1px solid gray !important;
 		}
 		
 		.printButton {
@@ -129,6 +131,7 @@
 			font-size: 16px;
 			width: 200px;
 			margin-bottom: 10px;
+			height: 40px;
 		}
 		
 		.overlay {
@@ -401,7 +404,7 @@
 		}
 	</style>
   </head>
-  <body class="canvasAndMenu app">
+  <body>
 	<div class="header">
 		
 		<!--
@@ -425,7 +428,7 @@
 			</div>
 		-->
 	</div>
-	<div>
+	<div class="app">
 		
 		<div id="printContainer"></div>
 		<!-- <img id="canvasImage" alt="Canvas Image"> -->
@@ -456,16 +459,17 @@
 						</form>
 					</div>
 				</fieldset>
-				<select id="paper-format" class="paperSizeSelector">
-					<option value="A4">A4</option>
-					<option value="A3">A3</option>
-					<option value="A2">A2</option>
-					<option value="A1">A1</option>
-				</select>
-				<!-- <button class="printButton">Печать</button> -->
-				<span id="descriptionText"></span>
-				<button id="openPopup" class="bigButtons">Заполнить штамп</button>
-				<!--
+				<div>
+					<select id="paper-format" class="paperSizeSelector">
+						<option value="A4">A4</option>
+						<option value="A3">A3</option>
+						<option value="A2">A2</option>
+						<option value="A1">A1</option>
+					</select>
+					<!-- <button class="printButton">Печать</button> -->
+					<button id="openPopup" class="bigButtons">Заполнить штамп</button>
+				</div>
+					<!--
 					<button id="addSheet" class="bigButtons">Добавить лист</button>
 				-->
 				<div id="overlay" class="overlay"></div>
@@ -1113,10 +1117,10 @@
 					fillTextFunc(context);
 				}
 				
-				const canvasContainer = document.querySelector('#canvasContainer');				
+				//const canvasContainer = document.querySelector('#canvasContainer');				
 
-				canvasContainer.style.width = `${sheetWidth * scale}px`;
-				canvasContainer.style.height = `${sheetHeight * scale}px`;
+				//canvasContainer.style.width = `${sheetWidth * scale}px`;
+				//canvasContainer.style.height = `${sheetHeight * scale}px`;
 			}
 			initialCanvas();
 			
