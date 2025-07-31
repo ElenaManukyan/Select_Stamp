@@ -56,6 +56,10 @@
 
 		/* Адаптация под мобилки (≤ 768px) */
 		@media (max-width: 768px) {
+			body {
+				touch-action: manipulation; /* Улучшает отклик на тапы */
+			}
+
 			.app {
 				flex-direction: column;
 				padding: 0;
@@ -74,6 +78,36 @@
 
 			#canvasContainer {
 				height: calc(100vh - 60px); /* Вычитаем высоту fieldset */
+			}
+
+			.popup {
+				width: 90%; /* Ширина 90% от экрана */
+				max-width: 100%; /* Максимальная ширина */
+				padding: 15px; /* Уменьшенные отступы */
+				top: 20px; /* Позиционирование сверху */
+				left: 5%; /* Центрирование с отступами */
+				transform: none; /* Отключаем transform для мобилок */
+				max-height: 90vh; /* Максимальная высота */
+				overflow-y: auto; /* Скролл при необходимости */
+			}
+
+			.popup-header {
+				font-size: 20px; /* Уменьшаем размер заголовка */
+			}
+
+			.clearLclStorage,
+			.cancel-btn,
+			.ok-btn {
+				width: 100%; /* Кнопки на всю ширину */
+				margin-top: 10px; /* Уменьшаем отступы */
+				padding: 12px 0; /* Вертикальные отступы */
+				font-size: 14px; /* Уменьшаем размер текста */
+			}
+
+			.close-btn {
+				font-size: 18px; /* Уменьшаем крестик */
+				top: 5px;
+				right: 5px;
 			}
 		}
 		
@@ -1912,7 +1946,7 @@
 				context.stroke();
 
 				context.save();
-				context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+				context.translate((20 - 7 - 1.5) * zoom, (sheetHeight - 5) * zoom);  // x = 16.7; y = 280.3;
 				context.rotate(-Math.PI / 2);
 				// Fill table
 
@@ -1924,11 +1958,17 @@
 				const textSizeInv = (3.5) * zoom;		
 				context.fillStyle = "black";
 				context.font = `${textSizeInv}px "Arial Narrow", Arial, sans-serif`;
-				context.fillText("Инв. № подл.", (0) * zoom, (0) * zoom);  // x = 0; y = 0;
-				context.fillText("Подп. и дата", (30) * zoom, (0) * zoom);  // x = 30; y = 0;
-				context.fillText("Взам. инв. №", (25 + 35) * zoom, (0) * zoom);  // x = 60; y = 0;
-				context.fillText("Инв. № дубл.", (25 + 35 + 25) * zoom, (0) * zoom);  // x = 85.2; y = 0;
-				context.fillText("Подп. и дата", (25 + 35 + 25 + 25 + 5) * zoom, (0) * zoom);  // x = 115; y = 0;
+				
+				const invNumPodlWidth = context.measureText("Инв. № подл.").width;
+				context.fillText("Инв. № подл.", (12.5 - (invNumPodlWidth / 2)) * zoom, (0) * zoom);  // x = 0; y = 0;
+				const podpAndDataWidth = context.measureText("Подп. и дата").width;
+				context.fillText("Подп. и дата", (42.5 - (podpAndDataWidth / 2)) * zoom, (0) * zoom);  // x = 30; y = 0;
+				const vzamInvNumWidth = context.measureText("Взам. инв. №").width;
+				context.fillText("Взам. инв. №", (72.5 - (vzamInvNumWidth / 2)) * zoom, (0) * zoom);  // x = 60; y = 0;
+				const invNumDublWidth = context.measureText("Инв. № дубл.").width;
+				context.fillText("Инв. № дубл.", (97.5 - (invNumDublWidth / 2)) * zoom, (0) * zoom);  // x = 85.2; y = 0;
+				const podpAndDataWidth2 = context.measureText("Подп. и дата").width;
+				context.fillText("Подп. и дата", (127.5 - (podpAndDataWidth2 / 2)) * zoom, (0) * zoom);  // x = 115; y = 0;
 				
 				context.restore();
 
@@ -1938,6 +1978,19 @@
 				if (orientation === "landscape" && format === "A4") {
 					return;
 				} else {
+
+									/*
+					const txtWidth = context.measureText(weight).width;
+					context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 8.5 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+				*/
+					/*
+				const textSizeInv = (3.5) * zoom;		
+				context.fillStyle = "black";
+				context.font = `${textSizeInv}px "Arial Narrow", Arial, sans-serif`;
+				*/
+
+
+
 					context.beginPath();
 					context.lineCap = "square";
 					// set the line width to (1 pixel * zoom) = 3.78
@@ -1964,14 +2017,16 @@
 					
 					// Fill the table Sprav №
 					context.save();
-					context.translate(((20 - 7) - 1.5) * zoom, (sheetHeight - (5 + 3.6)) * zoom);  // x = 16.7; y = 280.3;
+					context.translate((20 - 7 - 1.5) * zoom, (sheetHeight - 5 - 287 + 60 + 60) * zoom);  // x = 16.7; y = 280.3;
 					context.rotate(-Math.PI / 2);
 					
 					const textSizeChange = (3.5) * zoom;		
-					context.font = `${textSizeChange}px Arial Narrow`;
+					context.font = `${textSizeChange}px "Arial Narrow", Arial, sans-serif`;
 					
-					context.fillText("Справ. №", (287 - 60 - 40) * zoom, (0) * zoom);  // x = 180.4; y = 0;
-					context.fillText("Перв. примен.", (287 - 43) * zoom, (0) * zoom);  // x = 234.7; y = 0;
+					const SpravNumWidth = context.measureText("Справ. №").width;
+					context.fillText("Справ. №", (30 - (SpravNumWidth / 2)) * zoom, (0) * zoom);  // x = 180.4; y = 0;
+					const pervPrimWidth = context.measureText("Перв. примен.").width;
+					context.fillText("Перв. примен.", (60 + 30 - (pervPrimWidth / 2)) * zoom, (0) * zoom);  // x = 234.7; y = 0;
 				
 					context.restore();
 				}
@@ -2196,54 +2251,76 @@
 			
 			function fillStampDevTable(sheetWidth, sheetHeight, zoom, designSheet, context, sheetNumber) {
 				
+				const textSizeDev = (3.5) * zoom;		
+				context.font = `${textSizeDev}px "Arial Narrow", Arial, sans-serif`;
+
+				const izmWidth = context.measureText("Изм.").width;
+				const listWidth = context.measureText("Лист").width;
+				const numDocumWidth = context.measureText("№ докум.").width;
+				const podpWidth = context.measureText("Подп.").width;
+				const dataWidth = context.measureText("Дата").width;
+
+
 				if (designSheet === 'firstSheet') {
 					// Filling the stamp
-					const textSizeDev = (3.5) * zoom;		
-					context.font = `${textSizeDev}px Arial Narrow`;
 					context.fillStyle = "black";
 					context.fillText("Утв.", ((sheetWidth - (5)) - (185 - 1)) * zoom, ((sheetHeight - (5)) - (1)) * zoom);  // x = 26; y = 282.9;
 					context.fillText("Н.контр.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 1)) * zoom);  // x = 26; y = 277.9;
 					context.fillText("Т.контр.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 267.9;
 					context.fillText("Пров.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 262.9;
 					context.fillText("Разраб.", (sheetWidth - (5 + 185 - 1)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 1)) * zoom);  // x = 26; y = 257.9;
-					context.fillText("Лит.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 157.2; y = 247.9;
-					context.fillText("Масса", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 4.5)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 171.5; y = 247.9;
-					context.fillText("Масштаб", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17 - 3)) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 187.3; y = 247.9;
-					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
+					const litWidth = context.measureText("Лит.").width;
+					context.fillText("Лит.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 7.5 + (litWidth / 2))) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 157.2; y = 247.9;
+					const massaWidth = context.measureText("Масса").width;
+					context.fillText("Масса", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 8.5 + (massaWidth / 2))) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 171.5; y = 247.9;
+					const mashtabWidth = context.measureText("Масштаб").width;
+					context.fillText("Масштаб", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17 - 9 + (mashtabWidth / 2))) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 187.3; y = 247.9;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 8 + (listWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 154; y = 267.8;
 					// context.fillText(`${sheetNumber}`, (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2 - 8)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
-					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 2)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 174.5; y = 267.8;
+					const listovWidth = context.measureText("Листов").width;
+					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 11 + (listovWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 174.5; y = 267.8;
 					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 133.3; y = 287.7;
 					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 173.1; y = 287.7;
 					
 					
 					const textSizeChange = (3.5) * zoom;		
-					context.font = `${textSizeChange}px Arial Narrow`;
+					context.font = `${textSizeChange}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "black";
-					context.fillText("Изм.", (sheetWidth - (5 + 185 - 0.5)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 25.7; y = 253;
-					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 2)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 34; y = 253;
-					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 5)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 47.8; y = 253;
-					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 4)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 69; y = 253;
-					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 2)) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.1)) * zoom);  // x = 82; y = 253;
+					context.fillText("Изм.", (sheetWidth - (5 + 185 - 3.5 + (izmWidth / 2))) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.25)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 5 + (listWidth / 2))) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.25)) * zoom);  // x = 34; y = 253;
+					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 11.5 + (numDocumWidth / 2))) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.25)) * zoom);  // x = 47.8; y = 253;
+					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 7.5 + (podpWidth /  2))) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.25)) * zoom);  // x = 69; y = 253;
+					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 5 + (dataWidth / 2))) * zoom, (sheetHeight - (5 + 5 + 5 + 5 + 5 + 5 + 5 + 1.25)) * zoom);  // x = 82; y = 253;
 					
 					
 				} else {					
 					// Filling the stamp
 					const textSizeDev = (3.5) * zoom;		
-					context.font = `${textSizeDev}px Arial Narrow`;
+					context.font = `${textSizeDev}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "black";
 					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1)) * zoom);  // x = 133.3; y = 287.7;
 					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1)) * zoom);  // x = 173.1; y = 287.7;
 					
 					
-					const textSizeChange = (3.5) * zoom;		
-					context.font = `${textSizeChange}px Arial Narrow`;
+					/*
+						const txtWidth = context.measureText(weight).width;
+						context.fillText(weight, ((sheetWidth - 5) - 50 + 5 + 5 + 5 + 8.5 - (txtWidth / 2) ) * zoom, ((sheetHeight - 5) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
+					*/
+					/*
+					const textSizeInv = (3.5) * zoom;		
 					context.fillStyle = "black";
-					context.fillText("Изм.", (sheetWidth - (5 + 185 - 0.5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 25.7; y = 253;
-					context.fillText("Лист", (sheetWidth - (5 + 185 - 8.5 - 0.5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 25.7; y = 253;
-					context.fillText("Лист", (sheetWidth - (5 + 10 - 2)) * zoom, (sheetHeight - (5 + 8 + 2)) * zoom);  // x = 34; y = 253;
-					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 5)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 47.8; y = 253;
-					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 4)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 69; y = 253;
-					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 2)) * zoom, (sheetHeight - (5 + 1.1)) * zoom);  // x = 82; y = 253;
+					context.font = `${textSizeInv}px "Arial Narrow", Arial, sans-serif`;
+					*/
+
+					const textSizeChange = (3.5) * zoom;		
+					context.font = `${textSizeChange}px "Arial Narrow", Arial, sans-serif`;
+					context.fillStyle = "black";
+					context.fillText("Изм.", (sheetWidth - (5 + 185 - 3.5 + (izmWidth / 2))) * zoom, (sheetHeight - (5 + 1.25)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 5 + (listWidth / 2))) * zoom, (sheetHeight - (5 + 1.25)) * zoom);  // x = 25.7; y = 253;
+					context.fillText("Лист", (sheetWidth - (5 + 5 + (listWidth / 2))) * zoom, (sheetHeight - (5 + 8 + 2)) * zoom);  // x = 34; y = 253;
+					context.fillText("№ докум.", (sheetWidth - (5 + 185 - 7 - 10 - 11.5 + (numDocumWidth / 2))) * zoom, (sheetHeight - (5 + 1.25)) * zoom);  // x = 47.8; y = 253;
+					context.fillText("Подп.", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 7.5 + (podpWidth /  2))) * zoom, (sheetHeight - (5 + 1.25)) * zoom);  // x = 69; y = 253;
+					context.fillText("Дата", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 5 + (dataWidth / 2))) * zoom, (sheetHeight - (5 + 1.25)) * zoom);  // x = 82; y = 253;
 				}
 			}
 			
