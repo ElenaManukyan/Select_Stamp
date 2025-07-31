@@ -81,31 +81,31 @@
 			}
 
 			.popup {
-				width: 90%; /* Ширина 90% от экрана */
-				max-width: 100%; /* Максимальная ширина */
-				padding: 15px; /* Уменьшенные отступы */
-				top: 20px; /* Позиционирование сверху */
-				left: 5%; /* Центрирование с отступами */
-				transform: none; /* Отключаем transform для мобилок */
-				max-height: 90vh; /* Максимальная высота */
-				overflow-y: auto; /* Скролл при необходимости */
+				width: 90%; 
+				max-width: 100%; 
+				padding: 15px; 
+				top: 20px; 
+				left: 5%;
+				transform: none;
+				max-height: 90vh;
+				overflow-y: auto;
 			}
 
 			.popup-header {
-				font-size: 20px; /* Уменьшаем размер заголовка */
+				font-size: 20px;
 			}
 
 			.clearLclStorage,
 			.cancel-btn,
 			.ok-btn {
-				width: 100%; /* Кнопки на всю ширину */
-				margin-top: 10px; /* Уменьшаем отступы */
-				padding: 12px 0; /* Вертикальные отступы */
-				font-size: 14px; /* Уменьшаем размер текста */
+				width: 100%;
+				margin-top: 10px;
+				padding: 12px 0;
+				font-size: 14px;
 			}
 
 			.close-btn {
-				font-size: 18px; /* Уменьшаем крестик */
+				font-size: 18px;
 				top: 5px;
 				right: 5px;
 			}
@@ -945,7 +945,7 @@
 					
 					// сделай мастаб из input'а
 					const txtScaleWidth = context.measureText(scaleText).width;
-					context.fillText(scaleText, ((sheetWidth - 5) - 8.5 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5) - 15 - 10 - 1) * zoom);  // x = 187.3; y = 247.9;
+					context.fillText(scaleText, ((sheetWidth - 5) - 9 - (txtScaleWidth / 2)) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6.5) * zoom);  // x = 187.3; y = 247.9;
 					context.restore();
 					
 					context.save();
@@ -996,9 +996,9 @@
 					
 					context.font = `${3.5 * zoom}px Arial Narrow`;
 					context.fillStyle = "blue";
-					
-					context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 154; y = 267.8;
-					context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 1) * zoom);  // x = 174.5; y = 267.8;
+																														// 5 + 15 + 1.25
+					context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1.25) * zoom);  // x = 154; y = 267.8;
+					context.fillText(sheets, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 20 + 15 + 2) * zoom, ((sheetHeight - 5) - 15 - 1.25) * zoom);  // x = 174.5; y = 267.8;
 					
 					context.save();
 
@@ -1519,7 +1519,7 @@
 					weightInput.value = weight;
 					
 					const scaleInput = document.querySelector('#scale');
-					const scaleTxt = entriesDevTable.scale;
+					const scaleTxt = entriesDevTable.scaleText;
 					scaleInput.value = scaleTxt;
 					
 					const materialInput = document.querySelector('#material');
@@ -2275,10 +2275,10 @@
 					context.fillText("Масса", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 8.5 + (massaWidth / 2))) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 171.5; y = 247.9;
 					const mashtabWidth = context.measureText("Масштаб").width;
 					context.fillText("Масштаб", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 15 - 17 - 9 + (mashtabWidth / 2))) * zoom, (sheetHeight - (5 + 15 + 5 + 15 + 1)) * zoom);  // x = 187.3; y = 247.9;
-					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 8 + (listWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 154; y = 267.8;
+					context.fillText("Лист", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 10 + (listWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 154; y = 267.8;
 					// context.fillText(`${sheetNumber}`, (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 2 - 8)) * zoom, (sheetHeight - (5 + 15 + 1)) * zoom);  // x = 154; y = 267.8;
 					const listovWidth = context.measureText("Листов").width;
-					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 11 + (listovWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 174.5; y = 267.8;
+					context.fillText("Листов", (sheetWidth - (5 + 185 - 7 - 10 - 23 - 15 - 10 - 70 - 20 - 12 + (listovWidth))) * zoom, (sheetHeight - (5 + 15 + 1.25)) * zoom);  // x = 174.5; y = 267.8;
 					context.fillText("Копировал", (sheetWidth - (5 + 50 + 20)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 133.3; y = 287.7;
 					context.fillText(`Формат ${format}`, (sheetWidth - (5 + 30)) * zoom, (sheetHeight - (1.5)) * zoom);  // x = 173.1; y = 287.7;
 					
