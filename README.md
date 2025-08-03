@@ -16,9 +16,9 @@ Drawing Editor is a lightweight web application for viewing, editing, and managi
 - **Sheet Types**:
   - First sheet
   - Second sheet
-
-### 📄 Standard Formats
+  
 - **Paper Size**: A4 ▼ (with dropdown for other formats)
+  
 - **Auto-fill Stamp**: The function of quick filling of the stamp (data is saved in browser's local storage and persists after page reload/browser restart)
 
 ## 🛠️ Technical Specifications
