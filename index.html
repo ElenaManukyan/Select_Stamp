@@ -871,7 +871,7 @@
 						context.save();
 						context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
 						context.rotate(Math.PI / 1);
-						context.font = `${9 * zoom}px Arial Narrow`;
+						context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
 						//
@@ -879,7 +879,7 @@
 						context.restore();
 
 						context.save();
-						context.font = `${9 * zoom}px Arial Narrow`;
+						context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						const signCustomerWidth = context.measureText(signCustomer).width;
 						//
@@ -889,7 +889,7 @@
 						context.save();
 						context.translate((0) * zoom, (5 + 7 + 3.5) * zoom);  // x = 16.7; y = 280.3;
 						context.rotate(Math.PI / 1);
-						context.font = `${5.5 * zoom}px Arial Narrow`;
+						context.font = `${5.5 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						//
 						const litera1AboveWidth = context.measureText(litera1Above).width;
@@ -902,7 +902,7 @@
 						context.save();
 						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
 						context.rotate(- Math.PI / 2);
-						context.font = `${9 * zoom}px Arial Narrow`;
+						context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						const decimalNumAboveWidth = context.measureText(decimalNumAbove).width;
 						context.fillText(decimalNumAbove, ((0 - 40) - (decimalNumAboveWidth / 2)), (0 - 9));  // x = 26; y = 257.9;				
@@ -911,7 +911,7 @@
 						context.save();
 						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
 						context.rotate(Math.PI / 2);
-						context.font = `${9 * zoom}px Arial Narrow`;
+						context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						const signCustomerWidth = context.measureText(signCustomer).width;
 						context.fillText(signCustomer, ((82) - (signCustomerWidth / 2)), (15));  // x = 26; y = 257.9;
@@ -920,7 +920,7 @@
 						context.save();
 						context.translate((sheetWidth) * zoom, (0) * zoom);  // x = 16.7; y = 280.3;
 						context.rotate(Math.PI / 2);
-						context.font = `${5.5 * zoom}px Arial Narrow`;
+						context.font = `${5.5 * zoom}px "Arial Narrow", Arial, sans-serif`;
 						context.fillStyle = "blue";
 						const litera1AboveWidth = context.measureText(litera1Above).width;
 						context.fillText(litera1Above, ((115) - (litera1AboveWidth / 2)), (17.5));  // x = 26; y = 257.9;
@@ -934,7 +934,7 @@
 				if (designSheet === "firstSheet") {
 					// Fill the canvas
 					context.save();
-					context.font = `${9 * zoom}px Arial Narrow`;
+					context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";
 					const decNumWidthText = context.measureText(decimalNumber).width;
 					context.fillText(decimalNumber, ((sheetWidth - 5) - 10 - 50 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 40 - 4) * zoom);  // x = 26; y = 257.9;
@@ -943,7 +943,7 @@
 					variationInsertTop();
 
 					context.save();
-					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.font = `${3.5 * zoom}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";
 
 					context.fillText(O, ((sheetWidth - 5) - 50 + 1.5) * zoom, ((sheetHeight - 5 ) - 15 - 5 - 6.5) * zoom);  // x = 26; y = 282.9;
@@ -964,7 +964,7 @@
 					// Fill table
 					const textSizeInv = 3.5 * zoom;		
 					context.fillStyle = "blue";
-					context.font = `${textSizeInv}px Arial Narrow`;
+					context.font = `${textSizeInv}px "Arial Narrow", Arial, sans-serif`;
 
 					const invNumWidth = context.measureText(inventoryNum).width;
 					context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
@@ -985,7 +985,7 @@
 					context.save();
 					const textSizeDev = 3.5 * zoom;		
 					context.fillStyle = "blue";
-					context.font = `${textSizeDev}px Arial Narrow`;
+					context.font = `${textSizeDev}px "Arial Narrow", Arial, sans-serif`;
 
 					context.fillText(developer, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5) - 5 - 5 - 5 - 5 - 5 - 1) * zoom);  // x = 26; y = 257.9;
 					context.fillText(approving, ((sheetWidth - 5) - 185 + 17 + 1.5) * zoom, ((sheetHeight - 5 - 1)) * zoom);  // x = 26; y = 282.9;
@@ -1004,7 +1004,7 @@
 
 					context.restore();
 					
-					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.font = `${3.5 * zoom}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";
 																														// 5 + 15 + 1.25
 					context.fillText(sheet, ((sheetWidth - 5) - 185 + 7 + 10 + 23 + 15 + 10 + 70 + 8 + 2) * zoom, ((sheetHeight - 5) - 15 - 1.25) * zoom);  // x = 154; y = 267.8;
@@ -1016,7 +1016,7 @@
 					context.fillText(IdCustomer, ((sheetWidth - 5) - 120 + 60 - (IdCustomerWidth / 2)) * zoom, ((sheetHeight - 5) - 55 - 2) * zoom);  // x = 26; y = 257.9;
 					
 					const textSizeMainTitle = 5 * zoom;	
-					context.font = `${textSizeMainTitle}px Arial Narrow`;
+					context.font = `${textSizeMainTitle}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";	
 
 					const materialWidth = context.measureText(material).width;
@@ -1047,7 +1047,7 @@
 					variationInsertTop();
 
 					context.save();
-					context.font = `${3.5 * zoom}px Arial Narrow`;
+					context.font = `${3.5 * zoom}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";		
 					const sheetTxtWidth = context.measureText(sheet).width;	
 					context.fillText(sheet, ((sheetWidth - 5) - 5 - (sheetTxtWidth / 2)) * zoom, ((sheetHeight - 5) - 2.8) * zoom);
@@ -1055,7 +1055,7 @@
 
 
 					context.save();
-					context.font = `${9 * zoom}px Arial Narrow`;
+					context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";
 
 					const decNumWidthText = context.measureText(decimalNumber).width;
@@ -1064,7 +1064,7 @@
 					
 					// Zoom factor
 					const textSizeDev = 3.5 * zoom;		
-					context.font = `${textSizeDev}px Arial Narrow`;
+					context.font = `${textSizeDev}px "Arial Narrow", Arial, sans-serif`;
 					context.fillStyle = "blue";
 					const numberInputWidth = context.measureText(numberInput).width;
 					context.fillText(numberInput, ((sheetWidth - 5) - 185 + 3.5 - (numberInputWidth / 2)) * zoom, ((sheetHeight - 5) - 5 - 1) * zoom);  // x = 26; y = 257.9;
@@ -1082,7 +1082,7 @@
 					// Fill table
 					const textSizeInv = 3.5 * zoom;		
 					context.fillStyle = "blue";
-					context.font = `${textSizeInv}px Arial Narrow`;
+					context.font = `${textSizeInv}px "Arial Narrow", Arial, sans-serif`;
 
 					const invNumWidth = context.measureText(inventoryNum).width;
 					context.fillText(inventoryNum, (12.5 - (invNumWidth / 2)), (0));  // x = 0; y = 0;
@@ -1735,7 +1735,7 @@
 				
 				// Fill the canvas
 				context.save();
-				context.font = `${9 * zoom}px Arial Narrow`;
+				context.font = `${9 * zoom}px "Arial Narrow", Arial, sans-serif`;
 				context.fillStyle = "blue";
 				const decNumWidthText = context.measureText(decimalNumber).width;
 				context.fillText(decimalNumber, ((sheetWidth - 5) - 10 - 110 + 55 - (decNumWidthText / 2)) * zoom, ((sheetHeight - 5) - 3) * zoom);  // x = 26; y = 257.9;
