@@ -12,8 +12,7 @@ Drawing Editor is a lightweight web application for viewing, editing, and managi
 - **Orientation Control**:
   - Landscape
   - Portrait
-
-### 🎨 Design Templates
+  
 - **Sheet Types**:
   - First sheet
   - Second sheet
