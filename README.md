@@ -31,5 +31,12 @@ Drawing Editor is a lightweight web application for viewing, editing, and managi
 - [ ] Print function
 - [ ] UI/UX Design
 
+## ⚙️ Installation
+```
+git clone https://github.com/ElenaManukyan/Select_Stamp.git
+cd Select_Stamp
+Open `index.html` in browser
+```
+
 ## 💻 Try It Now
 [View Demo](https://select-stamp.onrender.com/)
